@@ -16,5 +16,7 @@
     "^@/lib/(.*)$",
     "^@/fonts/(.*)$",
     "^[./]"
-  ]
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
