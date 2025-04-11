@@ -4,7 +4,7 @@ import type { FieldPath, FieldValues } from 'react-hook-form';
 
 import { Input } from '@/components/ui/input';
 
-interface InputProps<T extends FieldValues>
+export interface InputProps<T extends FieldValues>
   extends React.ComponentProps<'input'> {
   name: FieldPath<T>;
 }
