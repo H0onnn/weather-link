@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
+import { cn } from '@/lib/utils';
+
 import './globals.css';
 
 const pretendard = localFont({
@@ -22,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={pretendard.className}>{children}</body>
+      <body className={cn(pretendard.className, 'bg-body')}>{children}</body>
     </html>
   );
 }
