@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "add:ui": "npx shadcn@latest add"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
