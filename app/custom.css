@@ -1,5 +1,7 @@
 :root {
   --red: #ff3c3c;
   --black: #121212;
-  --background: #f8f9fa;
+  --main: #f8f9fa;
+  --primary-hover: oklch(71% 0.13 235.41);
+  --primary-active: oklch(67% 0.14 235.41);
 }

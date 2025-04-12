@@ -7,7 +7,9 @@
   --font-pretendard: 'Pretendard', 'sans-serif';
   --color-red: var(--red);
   --color-black: var(--black);
-  --color-body: var(--background);
+  --color-body: var(--main);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
 }
 
 @theme inline {
@@ -59,6 +61,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(76.57% 0.1132 235.41);
+  --primary-hover: oklch(71% 0.13 235.41);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
