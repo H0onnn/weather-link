@@ -1,5 +1,7 @@
+import { Layout } from '@/layout';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -17,14 +19,16 @@ export const metadata: Metadata = {
   description: '오늘 날씨 어때? 웨더링크',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ko">
-      <body className={cn(pretendard.className, 'bg-body')}>{children}</body>
+      <body className={cn(pretendard.className, 'bg-background')}>
+        <Layout>{children}</Layout>
+      </body>
     </html>
   );
 }

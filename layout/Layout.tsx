@@ -1,0 +1,23 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+import React from 'react';
+
+import { MainHeader } from '@/layout/MainHeader';
+import { NavigationHeader } from '@/layout/NavigationHeader';
+
+import { headerTitleExtractor } from '@/utils/headerTitleExtractor';
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const navigationHeaderTitle = headerTitleExtractor(pathname);
+
+  return (
+    <div className="relative flex flex-col min-w-[390px] max-w-[560px] mx-auto min-h-[100dvh] bg-body">
+      {navigationHeaderTitle ? <NavigationHeader title={navigationHeaderTitle} /> : <MainHeader />}
+      <main className="flex-1 p-4">{children}</main>
+    </div>
+  );
+};
+
+export default Layout;
