@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import * as React from 'react';
 
+import { Toaster } from '@/components/Toaster';
 import { Layout } from '@/components/layout';
 
 import { cn } from '@/lib/utils';
@@ -29,6 +30,7 @@ export default async function RootLayout({
     <html lang="ko">
       <body className={cn(pretendard.className, 'bg-background')}>
         <Layout>{children}</Layout>
+        <Toaster richColors={true} />
       </body>
     </html>
   );
