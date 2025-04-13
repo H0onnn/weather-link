@@ -1,10 +1,9 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import React from 'react';
 
-import { MainHeader } from '@/layout/MainHeader';
-import { NavigationHeader } from '@/layout/NavigationHeader';
+import { MainHeader } from '@/components/layout/MainHeader';
+import { NavigationHeader } from '@/components/layout/NavigationHeader';
 
 import { headerTitleExtractor } from '@/utils/headerTitleExtractor';
 
