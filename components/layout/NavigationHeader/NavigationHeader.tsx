@@ -10,11 +10,9 @@ interface NavigationHeaderProps {
 const NavigationHeader = ({ title }: NavigationHeaderProps) => {
   return (
     <Header.Root>
-      <div className="grid grid-cols-4">
-        <Header.Back />
-        <Header.Title className="col-span-2">{title}</Header.Title>
-        <div className="col-span-1" />
-      </div>
+      <Header.Back />
+      <Header.Title>{title}</Header.Title>
+      <div className="w-9" />
     </Header.Root>
   );
 };
