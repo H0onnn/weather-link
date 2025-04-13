@@ -10,6 +10,10 @@
   --color-body: var(--main);
   --color-primary-hover: var(--primary-hover);
   --color-primary-active: var(--primary-active);
+  --color-gray800: var(--gray800);
+  --color-gray700: var(--gray700);
+  --color-gray600: var(--gray600);
+  --color-gray500: var(--gray500);
 }
 
 @theme inline {
