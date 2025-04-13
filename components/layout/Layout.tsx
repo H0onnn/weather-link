@@ -4,8 +4,7 @@ import { usePathname } from 'next/navigation';
 
 import { MainHeader } from '@/components/layout/MainHeader';
 import { NavigationHeader } from '@/components/layout/NavigationHeader';
-
-import { headerTitleExtractor } from '@/utils/headerTitleExtractor';
+import { headerTitleExtractor } from '@/components/layout/utils/headerTitleExtractor';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
