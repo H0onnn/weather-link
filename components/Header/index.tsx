@@ -1,7 +1,7 @@
 import { Back, LocationDisplay, Notification, Setting, Title } from './components';
 
 const Root = ({ children }: { children: React.ReactNode }) => {
-  return <header className="min-h-[80px] bg-background px-4 py-6 border-b border-b-gray-200">{children}</header>;
+  return <header className="min-h-[73px] bg-background px-4 py-6 border-b border-b-gray-200">{children}</header>;
 };
 
 const Header = () => null;

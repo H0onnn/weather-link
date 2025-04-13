@@ -37,9 +37,7 @@ const LoginForm = () => {
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <Input type="email" label="이메일" name="email" placeholder="이메일을 입력해주세요." />
         <Input type="password" label="비밀번호" name="password" placeholder="비밀번호를 입력해주세요." />
-        <Button className="h-12 text-md rounded-xl" type="submit">
-          로그인
-        </Button>
+        <Button type="submit">로그인</Button>
       </form>
       <ErrorMessage>{getLoginErrorMessage(errors)}</ErrorMessage>
     </FormProvider>

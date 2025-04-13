@@ -21,9 +21,7 @@ const CustomInput = <T extends FieldValues>({ name, className, type, label, ...p
       name={name}
       render={({ field: { onChange, ...field } }) => (
         <div className="flex flex-col gap-2.5">
-          <Label htmlFor={name} className="text-sm text-gray-600">
-            {label}
-          </Label>
+          <Label htmlFor={name}>{label}</Label>
           <Input id={name} className={className} type={type} {...props} {...field} onChange={onChange} />
         </div>
       )}
