@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Back, LocationDisplay, Notification, Setting, Title } from './components';
 
 const Root = ({ children }: { children: React.ReactNode }) => {

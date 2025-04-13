@@ -1,5 +1,3 @@
-import React from 'react';
-
 /*
  * 알림 컴포넌트
  */

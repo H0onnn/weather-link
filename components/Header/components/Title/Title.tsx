@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { cn } from '@/lib/utils';
 
 export interface HeaderTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {

@@ -1,7 +1,7 @@
-import { Layout } from '@/layout';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import React from 'react';
+
+import { Layout } from '@/components/layout';
 
 import { cn } from '@/lib/utils';
 
