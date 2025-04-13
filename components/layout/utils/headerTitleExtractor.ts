@@ -6,7 +6,7 @@ export const headerTitleExtractor = (pathname: string) => {
   };
 
   if (isValidPathname(pathname)) {
-    return NAVIGATION_HEADER_TITLE[pathname]?.title;
+    return NAVIGATION_HEADER_TITLE[pathname].title;
   }
 
   return null;

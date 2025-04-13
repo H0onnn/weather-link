@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import * as React from 'react';
 
 import { Layout } from '@/components/layout';
 
