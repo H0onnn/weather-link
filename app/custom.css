@@ -1,0 +1,11 @@
+:root {
+  --red: #ff3c3c;
+  --black: #121212;
+  --main: #f8f9fa;
+  --primary-hover: oklch(71% 0.13 235.41);
+  --primary-active: oklch(67% 0.14 235.41);
+  --gray800: #2c2f3a;
+  --gray700: #343a40;
+  --gray600: #575e75;
+  --gray500: #6b7280;
+}
