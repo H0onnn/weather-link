@@ -1,0 +1,85 @@
+import { getToken, removeToken } from '@/actions';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { redirect } from 'next/navigation';
+
+const isServer = typeof window === 'undefined';
+
+const API_BASE_URL = isServer ? process.env.NEXT_API_URL : process.env.NEXT_PUBLIC_API_URL;
+
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  withCredentials: true,
+  // fetch adapter
+  adapter: 'fetch',
+  fetchOptions: {
+    cache: 'force-cache',
+    credentials: 'include',
+  },
+} as AxiosRequestConfig);
+
+// req interceptor
+axiosInstance.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    // 서버 사이드에서는 getToken으로 쿠키에서 토큰을 가져와 헤더에 추가
+    // 클라이언트 사이드에서는 브라우저가 자동으로 쿠키 처리
+    if (isServer) {
+      const accessToken = await getToken();
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+
+    return config;
+  },
+  (error: AxiosError) => {
+    console.error('axios req error: ', error);
+    return Promise.reject(error);
+  },
+);
+
+// res interceptor
+axiosInstance.interceptors.response.use(
+  async (response: AxiosResponse) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    console.error('axios res error: ', error);
+
+    if (error.response && error.response.status === 401) {
+      console.error('Unauthorized');
+      await removeToken();
+
+      if (isServer) {
+        redirect('/login');
+      } else {
+        window.location.href = '/login';
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+export const api = {
+  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
+    axiosInstance.get<T>(url, config),
+
+  post: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
+    axiosInstance.post<T, AxiosResponse<T>, D>(url, data, config),
+
+  put: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
+    axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config),
+
+  patch: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
+    axiosInstance.patch<T, AxiosResponse<T>, D>(url, data, config),
+
+  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
+    axiosInstance.delete<T>(url, config),
+};
+
+export default axiosInstance;
