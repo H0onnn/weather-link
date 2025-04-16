@@ -1,5 +1,6 @@
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
+import { type HTMLMotionProps, motion } from 'framer-motion';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
@@ -32,19 +33,39 @@ const buttonVariants = cva(
   },
 );
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: React.ComponentProps<'button'> &
+// 애니메이션 설정
+const animationProps = {
+  initial: { scale: 1 },
+  whileTap: { scale: 0.97 },
+};
+
+type ButtonProps = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-  }) {
-  const Comp = asChild ? Slot : 'button';
+    isAnimated?: boolean;
+  };
 
+const MotionButton = motion.button;
+const MotionSlot = motion(Slot);
+
+function Button({ className, variant, size, asChild = false, isAnimated = true, ...props }: ButtonProps) {
+  if (isAnimated) {
+    const motionProps = {
+      ...animationProps,
+      className: cn(buttonVariants({ variant, size, className })),
+      'data-slot': 'button',
+      ...props,
+    } as HTMLMotionProps<'button'>;
+
+    if (asChild) {
+      return <MotionSlot {...motionProps} />;
+    }
+    return <MotionButton {...motionProps} />;
+  }
+
+  const Comp = asChild ? Slot : 'button';
   return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
 }
 
 export { Button, buttonVariants };
+export type { ButtonProps };
