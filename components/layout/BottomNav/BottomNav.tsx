@@ -27,7 +27,7 @@ const NavItem = ({ href, segment, activeSegment, activeIcon, inactiveIcon, label
       <Button variant="ghost" size="icon" className="hover:bg-transparent" asChild>
         <Link href={href}>
           <div className="flex flex-col items-center space-y-3">
-            <Image src={isActive ? activeIcon : inactiveIcon} alt={label} width={16} height={16} priority />
+            <Image src={isActive ? activeIcon : inactiveIcon} alt={label} width={16} height={16} />
             <span className={cn('text-xs', isActive ? 'text-primary' : 'text-gray500')}>{label}</span>
           </div>
         </Link>
