@@ -46,7 +46,7 @@ type ButtonProps = React.ComponentProps<'button'> &
   };
 
 const MotionButton = motion.button;
-const MotionSlot = motion(Slot);
+const MotionSlot = motion.create(Slot);
 
 function Button({ className, variant, size, asChild = false, isAnimated = true, ...props }: ButtonProps) {
   if (isAnimated) {
