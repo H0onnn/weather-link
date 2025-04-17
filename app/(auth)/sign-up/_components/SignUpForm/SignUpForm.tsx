@@ -3,7 +3,7 @@
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
-import { signupSchema } from '@/app/(auth)/sign-up/validator';
+import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -33,7 +33,7 @@ const defaultValues = {
 };
 
 const SignUpForm = () => {
-  const method = useForm({
+  const method = useForm<SignupFormSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues,
   });
