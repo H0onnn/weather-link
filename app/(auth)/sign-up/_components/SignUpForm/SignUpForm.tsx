@@ -67,6 +67,7 @@ const SignUpForm = () => {
               type="text"
               placeholder="사용하실 이름을 입력해주세요"
               error={errors.name?.message}
+              autoComplete="username"
             />
 
             <Input
@@ -76,6 +77,7 @@ const SignUpForm = () => {
               type="email"
               placeholder="example@email.com"
               error={errors.email?.message}
+              autoComplete="email"
             />
 
             <Input
@@ -85,6 +87,7 @@ const SignUpForm = () => {
               type="password"
               placeholder="최소 8자 이상, 특수문자, 대소문자 포함"
               error={errors.password?.message}
+              autoComplete="new-password"
             />
 
             <Input
@@ -94,6 +97,7 @@ const SignUpForm = () => {
               type="password"
               placeholder="비밀번호를 다시 입력해주세요"
               error={errors.passwordConfirm?.message}
+              autoComplete="new-password"
             />
 
             {/* 위치 */}
