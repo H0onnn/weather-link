@@ -24,12 +24,24 @@ const eslintConfig = [
           destructuredArrayIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-explicit-any': ['warn'],
       'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'error',
+      'react/react-in-jsx-scope': 'off',
     },
     settings: {
       next: {
         rootDir: '/',
+      },
+      react: {
+        version: 'detect',
+      },
+    },
+    parserOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      ecmaFeatures: {
+        jsx: true,
       },
     },
   }),
