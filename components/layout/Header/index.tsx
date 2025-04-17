@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import * as React from 'react';
 
 import { headerTitleExtractor } from '@/components/layout/utils/headerTitleExtractor';
 
