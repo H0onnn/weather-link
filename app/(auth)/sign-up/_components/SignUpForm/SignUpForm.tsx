@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { signupSchema } from '@/app/(auth)/sign-up/validator';
@@ -44,7 +45,6 @@ const SignUpForm = () => {
 
   const handleSubmit = submit(async (data) => {
     console.info(data);
-    alert(JSON.stringify(data));
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
@@ -70,14 +70,13 @@ const SignUpForm = () => {
               autoComplete="username"
             />
 
-            <Input
+            <Authenticator
+              type={AuthType.Signup}
               control={control}
               name="email"
               label="이메일"
-              type="email"
               placeholder="example@email.com"
               error={errors.email?.message}
-              autoComplete="email"
             />
 
             <Input
