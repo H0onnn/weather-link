@@ -6,6 +6,7 @@ import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { signupSchema } from '@/app/(auth)/sign-up/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
@@ -37,6 +38,8 @@ const SignUpForm = () => {
     defaultValues,
   });
 
+  const [isVerified, setIsVerified] = useState(false);
+
   const {
     handleSubmit: submit,
     control,
@@ -55,8 +58,9 @@ const SignUpForm = () => {
     <>
       <FormProvider {...method}>
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center py-4">
             <ProfileImageInput name="profileImage" />
+            <p className="text-xs text-gray-400">*이미지를 등록하지 않으면 기본 이미지로 설정돼요</p>
           </div>
 
           <div className="flex flex-col gap-y-4 mt-1">
@@ -77,6 +81,7 @@ const SignUpForm = () => {
               label="이메일"
               placeholder="example@email.com"
               error={errors.email?.message}
+              onVerified={() => setIsVerified(true)}
             />
 
             <Input
@@ -189,7 +194,7 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting}>
+          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting || !isVerified}>
             회원가입
           </Button>
         </form>
