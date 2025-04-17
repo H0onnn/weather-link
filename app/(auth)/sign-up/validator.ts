@@ -1,19 +1,29 @@
 import { z } from 'zod';
 
-import { PASSWORD_ERROR_MESSAGE, PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from '@/constants/valid';
+import {
+  ALL_TERMS_REQUIRED_ERROR_MESSAGE,
+  EMAIL_FORMAT_ERROR_MESSAGE,
+  EMAIL_REQUIRED_ERROR_MESSAGE,
+  GUGUN_REQUIRED_ERROR_MESSAGE,
+  INVALID_IMAGE_ERROR_MESSAGE,
+  LOCATION_TERMS_REQUIRED_ERROR_MESSAGE,
+  NAME_ERROR_MESSAGE,
+  NAME_LENGTH_ERROR_MESSAGE,
+  NAME_MAX_LENGTH,
+  NAME_REGEX,
+  NAME_REQUIRED_ERROR_MESSAGE,
+  PASSWORD_CONFIRM_ERROR_MESSAGE,
+  PASSWORD_ERROR_MESSAGE,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REQUIRED_ERROR_MESSAGE,
+  SIDO_REQUIRED_ERROR_MESSAGE,
+  TERMS_REQUIRED_ERROR_MESSAGE,
+} from '@/constants/valid';
 
-const PASSWORD_CONFIRM_ERROR_MESSAGE = '비밀번호가 일치하지 않습니다.';
-
-const NAME_REGEX = /^[가-힣a-zA-Z0-9]+$/;
-const NAME_MAX_LENGTH = 8;
-const NAME_ERROR_MESSAGE = '이름은 한글, 영어, 숫자만 입력 가능합니다.';
-const NAME_LENGTH_ERROR_MESSAGE = '이름은 최대 8글자까지 입력 가능합니다.';
+import { checkPassword } from '@/lib/validUtils';
 
 type SignupFormSchema = z.infer<typeof signupSchema>;
-
-const checkPassword = (password: string, passwordConfirm: string): boolean => {
-  return password === passwordConfirm;
-};
 
 const fileSchema = z.any().refine(
   (file) => {
@@ -26,39 +36,39 @@ const fileSchema = z.any().refine(
       (typeof file === 'object' && 'name' in file && 'type' in file && 'size' in file)
     );
   },
-  { message: '유효한 이미지 파일이 아닙니다.' },
+  { message: INVALID_IMAGE_ERROR_MESSAGE },
 );
 
 const signupSchema = z
   .object({
-    email: z.string().min(1, '이메일을 입력해주세요.').email('이메일 형식이 올바르지 않습니다.'),
+    email: z.string().min(1, EMAIL_REQUIRED_ERROR_MESSAGE).email(EMAIL_FORMAT_ERROR_MESSAGE),
     password: z
       .string()
-      .min(1, '비밀번호를 입력해주세요.')
+      .min(1, PASSWORD_REQUIRED_ERROR_MESSAGE)
       .min(PASSWORD_MIN_LENGTH, PASSWORD_ERROR_MESSAGE)
       .regex(PASSWORD_REGEX, PASSWORD_ERROR_MESSAGE),
     passwordConfirm: z.string(),
     name: z
       .string()
-      .min(1, '사용할 이름을 입력해주세요.')
+      .min(1, NAME_REQUIRED_ERROR_MESSAGE)
       .max(NAME_MAX_LENGTH, NAME_LENGTH_ERROR_MESSAGE)
       .regex(NAME_REGEX, NAME_ERROR_MESSAGE),
     profileImage: fileSchema.optional(),
     location: z.object({
-      sido: z.string().min(1, '시/도를 입력해주세요.'),
-      gugun: z.string().min(1, '시/군/구를 입력해주세요.'),
+      sido: z.string().min(1, SIDO_REQUIRED_ERROR_MESSAGE),
+      gugun: z.string().min(1, GUGUN_REQUIRED_ERROR_MESSAGE),
     }),
-    termsAgreed: z.boolean().refine((value) => value, { message: '서비스 이용약관에 동의해주세요.' }),
-    locationAgreed: z.boolean().refine((value) => value, { message: '개인정보 수집 및 이용에 동의해주세요.' }),
+    termsAgreed: z.boolean().refine((value) => value, { message: TERMS_REQUIRED_ERROR_MESSAGE }),
+    locationAgreed: z.boolean().refine((value) => value, { message: LOCATION_TERMS_REQUIRED_ERROR_MESSAGE }),
   })
   .refine(({ password, passwordConfirm }) => checkPassword(password, passwordConfirm), {
     message: PASSWORD_CONFIRM_ERROR_MESSAGE,
     path: ['passwordConfirm'],
   })
   .refine(({ termsAgreed, locationAgreed }) => termsAgreed && locationAgreed, {
-    message: '모든 필수 약관에 동의해주세요.',
+    message: ALL_TERMS_REQUIRED_ERROR_MESSAGE,
     path: ['termsAgreed', 'locationAgreed'],
   });
 
-export { signupSchema, PASSWORD_MIN_LENGTH, NAME_MAX_LENGTH };
+export { signupSchema };
 export type { SignupFormSchema };
