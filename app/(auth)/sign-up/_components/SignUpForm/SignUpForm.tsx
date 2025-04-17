@@ -43,12 +43,12 @@ const SignUpForm = () => {
   } = method;
 
   const handleSubmit = submit(async (data) => {
-    console.log(data);
+    console.info(data);
     alert(JSON.stringify(data));
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
-    console.log(`${provider} 소셜 회원가입`); // TODO: 소셜 회원가입 구현
+    console.info(`${provider} 소셜 회원가입`); // TODO: 소셜 회원가입 구현
   };
 
   return (

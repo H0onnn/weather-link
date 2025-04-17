@@ -1,4 +1,5 @@
 import { Providers } from '@/providers';
+import * as React from 'react';
 
 import { BottomNav } from '@/components/layout/BottomNav';
 import Header from '@/components/layout/Header';
