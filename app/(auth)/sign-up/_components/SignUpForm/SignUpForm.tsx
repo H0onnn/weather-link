@@ -106,7 +106,10 @@ const SignUpForm = () => {
 
             {/* 위치 */}
             <div>
-              <Label htmlFor="location">위치</Label>
+              <Label htmlFor="location">
+                위치
+                <span className="text-red-500"> *</span>
+              </Label>
               <div className="grid grid-cols-2 gap-3 mt-2.5">
                 <Controller
                   control={control}

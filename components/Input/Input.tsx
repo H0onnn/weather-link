@@ -28,6 +28,7 @@ const CustomInput = <T extends FieldValues>({
   isReset = true,
   rightSlot,
   leftSlot,
+  required = true,
   ...props
 }: InputProps<T>) => {
   const ref = React.useRef<HTMLInputElement>(null);
@@ -39,7 +40,10 @@ const CustomInput = <T extends FieldValues>({
       render={({ field: { onChange, ...field } }) => (
         <div>
           <div className="flex flex-col gap-2.5">
-            <Label htmlFor={name}>{label}</Label>
+            <Label htmlFor={name}>
+              {label}
+              {required && <span className="text-red-500">*</span>}
+            </Label>
             <Input
               {...props}
               {...field}
