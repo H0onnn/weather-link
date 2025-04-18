@@ -43,7 +43,7 @@ const SpeechBubble = ({ message, variant, className, nickname, profileImage, sen
       )}
 
       <div className="space-y-2">
-        <div className="space-x-2">
+        <div className={cn('flex items-center gap-x-2', isMine && 'flex-row-reverse')}>
           <span className="font-medium text-black text-sm">{nickname}</span>
           <span className="text-xs text-gray500">{dayjs(sentAt).format('A hh:mm')}</span>
         </div>
