@@ -34,7 +34,7 @@ const FindPasswordForm = () => {
   });
 
   return (
-    <div className="p-4">
+    <div className="p-5">
       <h3 className="text-black text-center text-2xl font-medium mt-[30px]">비밀번호를 잊으셨나요?</h3>
       <p className="text-gray500 text-sm text-center mt-2 mb-[30px]">
         가입하신 이메일 주소를 입력하시면 인증 코드를 보내드릴게요

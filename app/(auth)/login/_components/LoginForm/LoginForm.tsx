@@ -37,7 +37,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-5">
       <FormProvider {...method}>
         <div className="flex flex-col items-center justify-center py-4">
           <Image src="/icons/logo.svg" alt="로고" width={200} height={120} priority />
