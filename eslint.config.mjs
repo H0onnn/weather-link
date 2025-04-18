@@ -25,7 +25,7 @@ const eslintConfig = [
         },
       ],
       '@typescript-eslint/no-explicit-any': ['warn'],
-      'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
+      'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'error',
       'react/react-in-jsx-scope': 'off',
     },

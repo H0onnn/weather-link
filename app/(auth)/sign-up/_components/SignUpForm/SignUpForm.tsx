@@ -1,10 +1,12 @@
 'use client';
 
+import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
-import { signupSchema } from '@/app/(auth)/sign-up/validator';
+import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
@@ -31,10 +33,12 @@ const defaultValues = {
 };
 
 const SignUpForm = () => {
-  const method = useForm({
+  const method = useForm<SignupFormSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues,
   });
+
+  const [isVerified, setIsVerified] = useState(false);
 
   const {
     handleSubmit: submit,
@@ -44,7 +48,6 @@ const SignUpForm = () => {
 
   const handleSubmit = submit(async (data) => {
     console.info(data);
-    alert(JSON.stringify(data));
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
@@ -55,8 +58,9 @@ const SignUpForm = () => {
     <>
       <FormProvider {...method}>
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center py-4">
             <ProfileImageInput name="profileImage" />
+            <p className="text-xs text-gray-400">*이미지를 등록하지 않으면 기본 이미지로 설정돼요</p>
           </div>
 
           <div className="flex flex-col gap-y-4 mt-1">
@@ -67,15 +71,17 @@ const SignUpForm = () => {
               type="text"
               placeholder="사용하실 이름을 입력해주세요"
               error={errors.name?.message}
+              autoComplete="username"
             />
 
-            <Input
+            <Authenticator
+              type={AuthType.Signup}
               control={control}
               name="email"
               label="이메일"
-              type="email"
               placeholder="example@email.com"
               error={errors.email?.message}
+              onVerified={() => setIsVerified(true)}
             />
 
             <Input
@@ -85,6 +91,7 @@ const SignUpForm = () => {
               type="password"
               placeholder="최소 8자 이상, 특수문자, 대소문자 포함"
               error={errors.password?.message}
+              autoComplete="new-password"
             />
 
             <Input
@@ -94,11 +101,15 @@ const SignUpForm = () => {
               type="password"
               placeholder="비밀번호를 다시 입력해주세요"
               error={errors.passwordConfirm?.message}
+              autoComplete="new-password"
             />
 
             {/* 위치 */}
             <div>
-              <Label htmlFor="location">위치</Label>
+              <Label htmlFor="location">
+                위치
+                <span className="text-red-500"> *</span>
+              </Label>
               <div className="grid grid-cols-2 gap-3 mt-2.5">
                 <Controller
                   control={control}
@@ -186,7 +197,7 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting}>
+          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting || !isVerified}>
             회원가입
           </Button>
         </form>

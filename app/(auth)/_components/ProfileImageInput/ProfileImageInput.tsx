@@ -36,7 +36,7 @@ const ProfileImageInput = ({ name = 'profileImage' }: ProfileImageInputProps) =>
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-4">
+    <div className="flex flex-col items-center justify-center">
       <div className="relative cursor-pointer" onClick={handleClick}>
         <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
           {previewUrl ? (
