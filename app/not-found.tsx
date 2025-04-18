@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col bg-gray-50 max-w-[430px] mx-auto text-black mt-12">
+    <div className="flex flex-col bg-gray-50 max-w-[430px] mx-auto text-black mt-12 p-4">
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-6">
           <CloudOff className="w-16 h-16 text-primary" />
