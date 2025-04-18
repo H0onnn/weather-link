@@ -3,7 +3,7 @@ import { PATH } from '@/constants/paths';
 const NAV_ITEMS = [
   {
     href: PATH.root,
-    activeSegment: null,
+    activeSegment: '(main)',
     activeIcon: '/icons/nav/home-active.svg',
     inactiveIcon: '/icons/nav/home.svg',
     label: '홈',
