@@ -91,3 +91,6 @@ export const WEATHER_INFO_ICONS = {
     ...DEFAULT_ICON_SIZE,
   },
 } as const;
+
+export type WeatherIconType = keyof typeof WEATHER_ICONS;
+export type WeatherInfoIconType = keyof typeof WEATHER_INFO_ICONS;
