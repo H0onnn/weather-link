@@ -1,8 +1,12 @@
 import { VariantProps, cva } from 'class-variance-authority';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 import { User } from 'lucide-react';
 import { type HTMLAttributes } from 'react';
 
 import { cn } from '@/lib/utils';
+
+dayjs.locale('ko');
 
 const bubbleVariants = cva(
   `inline-flex items-center justify-center rounded-[16px] p-2 max-w-[280px] text-black text-sm`,
@@ -41,7 +45,7 @@ const SpeechBubble = ({ message, variant, className, nickname, profileImage, sen
       <div className="space-y-2">
         <div className="space-x-2">
           <span className="font-medium text-black text-sm">{nickname}</span>
-          <span className="text-xs text-gray500">{sentAt.toLocaleString()}</span>
+          <span className="text-xs text-gray500">{dayjs(sentAt).format('A hh:mm')}</span>
         </div>
 
         <div className="flex items-end">
