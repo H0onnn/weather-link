@@ -6,8 +6,8 @@ export interface WeatherIcon {
 }
 
 const DEFAULT_ICON_SIZE = {
-  width: 24,
-  height: 24,
+  width: 40,
+  height: 40,
 };
 
 /**
