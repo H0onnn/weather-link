@@ -57,7 +57,7 @@ const SignUpForm = () => {
   return (
     <>
       <FormProvider {...method}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="p-4">
           <div className="flex flex-col items-center justify-center py-4">
             <ProfileImageInput name="profileImage" />
             <p className="text-xs text-gray-400">*이미지를 등록하지 않으면 기본 이미지로 설정돼요</p>
