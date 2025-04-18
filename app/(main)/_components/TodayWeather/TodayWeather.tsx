@@ -2,7 +2,7 @@ import { WeatherIcon } from '@/components/WeatherIcon';
 
 const TodayWeather = () => {
   return (
-    <div className="bg-white rounded-[16px] p-6 shadow-sm">
+    <div className="bg-white rounded-[16px] p-6 shadow-shadow1">
       <div className="flex flex-col items-center mb-6">
         <div className="flex items-center justify-center mb-2">
           <WeatherIcon type="SUNNY" width={80} height={80} className="mr-2" />
