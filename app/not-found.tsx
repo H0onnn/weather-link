@@ -5,6 +5,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 
+import { PATH } from '@/constants/paths';
+
 export default function NotFound() {
   return (
     <div className="flex flex-col bg-gray-50 max-w-[430px] mx-auto text-black mt-12 p-5">
@@ -19,7 +21,7 @@ export default function NotFound() {
           주소를 다시 확인하거나 아래 버튼을 통해 홈으로 이동해주세요
         </p>
 
-        <Link href="/" className="w-full">
+        <Link href={PATH.root} className="w-full">
           <Button size="lg">
             <Home className="w-5 h-5" />
             홈으로 이동
