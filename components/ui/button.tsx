@@ -40,8 +40,8 @@ const animationProps = {
   whileTap: { scale: 0.97 },
 };
 
-type ButtonProps = React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
+export interface ButtonProps extends React.ComponentProps<'button'>,
+  VariantProps<typeof buttonVariants> {
     asChild?: boolean;
     isAnimated?: boolean;
   };

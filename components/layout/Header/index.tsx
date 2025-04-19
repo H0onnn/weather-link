@@ -32,7 +32,7 @@ const NavigationHeader = ({ title }: { title: string }) => {
     <Root>
       <Back />
       <Title>{title}</Title>
-      <div className="w-9" />
+      <div className="w-9"></div>
     </Root>
   );
 };
