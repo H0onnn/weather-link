@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type UseCountdownTimerProps = {
   initialTime: number;
@@ -10,12 +10,11 @@ type UseCountdownTimerProps = {
 const useTimer = ({ initialTime, onTimeout }: UseCountdownTimerProps) => {
   const [remainingTime, setRemainingTime] = useState(initialTime);
   const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
     if (isRunning && remainingTime > 0) {
-      intervalId = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setRemainingTime((prevTime) => {
           if (prevTime <= 1) {
             setIsRunning(false);
@@ -28,7 +27,7 @@ const useTimer = ({ initialTime, onTimeout }: UseCountdownTimerProps) => {
     }
 
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isRunning, remainingTime, onTimeout]);
 
