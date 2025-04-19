@@ -1,4 +1,5 @@
-import { QueryClient, isServer } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, isServer } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 
 const makeQueryClient = () => {
   return new QueryClient({
@@ -7,8 +8,29 @@ const makeQueryClient = () => {
         // SSR 환경에서는 보통 클라이언트에서 즉시 재요청하는 것을 방지하기 위해
         // staleTime을 0보다 큰 값으로 설정
         staleTime: 60 * 1000,
+        throwOnError: true,
       },
     },
+    queryCache: new QueryCache({
+      onError: (error: unknown) => {
+        if (isAxiosError(error)) {
+        }
+
+        if (error instanceof QueryError) {
+        }
+
+        throw error;
+      },
+    }),
+
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        if (error instanceof QueryError) {
+        }
+
+        throw error;
+      },
+    }),
   });
 };
 
@@ -25,3 +47,18 @@ export const getQueryClient = () => {
     return browserQueryClient;
   }
 };
+
+/**
+ * 커스텀 에러 클래스
+ */
+export class QueryError extends Error {
+  responseCode: string;
+  message: string;
+
+  constructor(responseCode: string, message: string) {
+    super();
+
+    this.responseCode = responseCode;
+    this.message = message;
+  }
+}
