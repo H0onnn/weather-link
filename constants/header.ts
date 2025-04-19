@@ -20,4 +20,7 @@ export const NAVIGATION_HEADER_TITLE = {
   [PATH.signUp]: {
     title: '회원가입',
   },
+  [PATH.friend]: {
+    title: '친구',
+  },
 } satisfies NavigationHeaderPath;

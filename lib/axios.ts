@@ -20,7 +20,7 @@ const axiosInstance: AxiosInstance = axios.create({
     cache: 'force-cache',
     credentials: 'include',
   },
-} as AxiosRequestConfig);
+} satisfies AxiosRequestConfig);
 
 // req interceptor
 axiosInstance.interceptors.request.use(
@@ -29,6 +29,7 @@ axiosInstance.interceptors.request.use(
     // 클라이언트 사이드에서는 브라우저가 자동으로 쿠키 처리
     if (isServer) {
       const accessToken = await getToken();
+
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

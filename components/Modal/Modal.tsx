@@ -11,8 +11,6 @@ type ExtractComponentProps<T> = T extends FunctionComponent<infer P> ? P : never
 type ExtractedOverlayControllerProps = ExtractComponentProps<OverlayControllerComponent>;
 
 export interface ModalProps extends Omit<ExtractedOverlayControllerProps, 'overlayId'> {
-  title: string;
-  description: string;
   children: ReactNode;
   titleSlot: ReactNode;
   buttonSlot: ReactNode;
@@ -45,7 +43,7 @@ const Dialog = ({ children, buttonSlot, isOpen = false, close, unmount, classNam
               'w-[396px]',
               'top-1/2 left-1/2',
               'grid min-h-0 h-auto gap-6',
-              'bg-white rounded-[20px] px-3 pt-[34px] pb-5 shadow-lg',
+              'bg-white rounded-[20px] px-3 pt-7 pb-5 shadow-lg',
               className,
             )}
             initial={{ opacity: 0, scale: 1, x: '-50%', y: '-50%' }}
@@ -60,7 +58,7 @@ const Dialog = ({ children, buttonSlot, isOpen = false, close, unmount, classNam
           >
             <div className={cn('flex flex-col gap-3 text-left px-2')}>
               {titleSlot}
-              <div className="mt-1">{children}</div>
+              <div className="mt-1 text-sm text-gray-500">{children}</div>
             </div>
             <div className="flex w-full gap-2">{buttonSlot}</div>
           </motion.div>
