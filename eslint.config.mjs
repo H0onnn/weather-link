@@ -44,6 +44,10 @@ const eslintConfig = [
         jsx: true,
       },
     },
+    globals: {
+      PropType: 'readonly',
+      ArrayType: 'readonly',
+    },
   }),
 ];
 
