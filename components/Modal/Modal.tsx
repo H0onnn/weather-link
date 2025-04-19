@@ -11,7 +11,7 @@ type ExtractComponentProps<T> = T extends FunctionComponent<infer P> ? P : never
 type ExtractedOverlayControllerProps = ExtractComponentProps<OverlayControllerComponent>;
 
 export interface ModalProps extends Omit<ExtractedOverlayControllerProps, 'overlayId'> {
-  children: ReactNode;
+  children?: ReactNode;
   titleSlot: ReactNode;
   buttonSlot: ReactNode;
   className?: string;

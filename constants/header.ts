@@ -21,6 +21,6 @@ export const NAVIGATION_HEADER_TITLE = {
     title: '회원가입',
   },
   [PATH.friend]: {
-    title: '친구',
+    title: '내 친구',
   },
 } satisfies NavigationHeaderPath;
