@@ -1,5 +1,6 @@
-//FIXME: 고쳐야함
 export interface ResponseModel {
-  code: string;
+  success?: boolean;
+  statusCode?: number;
+  error?: string;
   message: string;
 }
