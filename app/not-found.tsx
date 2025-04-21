@@ -9,7 +9,7 @@ import { PATH } from '@/constants/paths';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col bg-gray-50 max-w-[430px] mx-auto text-black mt-12 p-5">
+    <div className="flex flex-col max-w-[430px] mx-auto text-black mt-12 p-5">
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-6">
           <CloudOff className="w-16 h-16 text-primary" />
@@ -21,8 +21,8 @@ export default function NotFound() {
           주소를 다시 확인하거나 아래 버튼을 통해 홈으로 이동해주세요
         </p>
 
-        <Link href={PATH.root} className="w-full">
-          <Button size="lg">
+        <Link href={PATH.root}>
+          <Button size="lg" className="rounded-[16px]">
             <Home className="w-5 h-5" />
             홈으로 이동
           </Button>

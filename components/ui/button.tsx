@@ -40,11 +40,10 @@ const animationProps = {
   whileTap: { scale: 0.97 },
 };
 
-export interface ButtonProps extends React.ComponentProps<'button'>,
-  VariantProps<typeof buttonVariants> {
-    asChild?: boolean;
-    isAnimated?: boolean;
-  };
+interface ButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  isAnimated?: boolean;
+}
 
 const MotionButton = motion.button;
 const MotionSlot = motion.create(Slot);
