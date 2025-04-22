@@ -47,6 +47,7 @@ const eslintConfig = [
     globals: {
       PropType: 'readonly',
       ArrayType: 'readonly',
+      React: 'readonly',
     },
   }),
 ];
