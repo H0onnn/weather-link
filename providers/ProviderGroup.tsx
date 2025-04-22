@@ -1,5 +1,6 @@
 'use client';
 
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { OverlayProvider } from 'overlay-kit';
 import { type ReactNode } from 'react';
 
@@ -12,7 +13,9 @@ type ProvidersProps = {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryProvider>
-      <OverlayProvider>{children}</OverlayProvider>
+      <OverlayProvider>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </OverlayProvider>
     </QueryProvider>
   );
 };
