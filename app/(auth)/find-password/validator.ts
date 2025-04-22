@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { checkPassword } from '@/utils/validUtils';
+
 import {
   EMAIL_FORMAT_ERROR_MESSAGE,
   EMAIL_REQUIRED_ERROR_MESSAGE,
@@ -9,8 +11,6 @@ import {
   PASSWORD_REGEX,
   PASSWORD_REQUIRED_ERROR_MESSAGE,
 } from '@/constants/valid';
-
-import { checkPassword } from '@/lib/validUtils';
 
 type FindPasswordFormSchema = z.infer<typeof findPasswordSchema>;
 

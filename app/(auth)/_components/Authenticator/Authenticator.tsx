@@ -8,8 +8,9 @@ import { type Control, type FieldPath, type FieldValues, useWatch } from 'react-
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
 
+import { validEmail } from '@/utils/validUtils';
+
 import { cn } from '@/lib/utils';
-import { validEmail } from '@/lib/validUtils';
 
 import CertNumInput from './CertNumInput';
 
