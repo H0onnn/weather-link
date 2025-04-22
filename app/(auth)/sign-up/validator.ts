@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { checkPassword } from '@/utils/validUtils';
+
 import {
   ALL_TERMS_REQUIRED_ERROR_MESSAGE,
   EMAIL_FORMAT_ERROR_MESSAGE,
@@ -20,8 +22,6 @@ import {
   SIDO_REQUIRED_ERROR_MESSAGE,
   TERMS_REQUIRED_ERROR_MESSAGE,
 } from '@/constants/valid';
-
-import { checkPassword } from '@/lib/validUtils';
 
 type SignupFormSchema = z.infer<typeof signupSchema>;
 
