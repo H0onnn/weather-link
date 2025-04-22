@@ -14,4 +14,13 @@ export const NAVIGATION_HEADER_TITLE = {
   [PATH.login]: {
     title: '로그인',
   },
+  [PATH.findPassword]: {
+    title: '비밀번호 찾기',
+  },
+  [PATH.signUp]: {
+    title: '회원가입',
+  },
+  [PATH.friend]: {
+    title: '내 친구',
+  },
 } satisfies NavigationHeaderPath;

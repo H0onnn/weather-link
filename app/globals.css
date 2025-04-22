@@ -14,6 +14,8 @@
   --color-gray700: var(--gray700);
   --color-gray600: var(--gray600);
   --color-gray500: var(--gray500);
+  --color-secondary: var(--secondary);
+  --color-warn: var(--warn);
 }
 
 @theme inline {
@@ -54,6 +56,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --shadow-shadow1: var(--shadow1);
 }
 
 :root {

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import * as React from 'react';
 
 import { headerTitleExtractor } from '@/components/layout/utils/headerTitleExtractor';
 
@@ -31,7 +32,7 @@ const NavigationHeader = ({ title }: { title: string }) => {
     <Root>
       <Back />
       <Title>{title}</Title>
-      <div className="w-9" />
+      <div className="w-9"></div>
     </Root>
   );
 };
