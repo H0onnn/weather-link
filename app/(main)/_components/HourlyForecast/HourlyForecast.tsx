@@ -30,7 +30,7 @@ const HourlyForecast = () => {
       <h2 className="text-lg font-bold mb-2">시간별 예보</h2>
 
       <div className="bg-white rounded-[16px] p-4 shadow-shadow1">
-        <div className="flex overflow-x-auto pb-2 space-x-4">
+        <div className="flex overflow-x-auto space-x-4">
           {hourlyData.map((hour, index) => (
             <div key={index} className="flex flex-col items-center min-w-[60px]">
               <span className="text-sm text-gray500">{hour.time}</span>
