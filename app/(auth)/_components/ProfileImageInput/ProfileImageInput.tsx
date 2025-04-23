@@ -8,9 +8,14 @@ import { useFormContext } from 'react-hook-form';
 interface ProfileImageInputProps {
   name?: string;
   isDescriptionVisible?: boolean;
+  defaultImage?: string;
 }
 
-const ProfileImageInput = ({ name = 'profileImage', isDescriptionVisible = true }: ProfileImageInputProps) => {
+const ProfileImageInput = ({
+  name = 'profileImage',
+  isDescriptionVisible = true,
+  defaultImage,
+}: ProfileImageInputProps) => {
   const { register, setValue } = useFormContext();
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
@@ -44,7 +49,11 @@ const ProfileImageInput = ({ name = 'profileImage', isDescriptionVisible = true 
             <Image src={previewUrl} alt="프로필 이미지" className="w-full h-full object-cover" width={96} height={96} />
           ) : (
             <div className="flex items-center justify-center w-full h-full bg-gray-100">
-              <User className="w-12 h-12 text-gray-400" />
+              {defaultImage ? (
+                <Image src={defaultImage} alt="프로필" className="w-full h-full object-cover" width={96} height={96} />
+              ) : (
+                <User className="w-12 h-12 text-gray-400" />
+              )}
             </div>
           )}
         </div>
