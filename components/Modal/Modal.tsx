@@ -42,7 +42,7 @@ const Dialog = ({ children, buttonSlot, isOpen = false, close, unmount, classNam
               'fixed z-[9999]',
               'w-[calc(100%-44px)] lg:w-[396px]',
               'top-1/2 left-1/2',
-              'grid min-h-0 h-auto gap-6',
+              'grid min-h-0 h-auto',
               'bg-white rounded-[20px] px-3 pt-7 pb-5 shadow-lg',
               className,
             )}
@@ -56,9 +56,9 @@ const Dialog = ({ children, buttonSlot, isOpen = false, close, unmount, classNam
               stiffness: 500,
             }}
           >
-            <div className={cn('flex flex-col gap-3 text-left px-2')}>
-              {titleSlot}
-              <div className="mt-1 text-sm text-gray500">{children}</div>
+            <div className="flex flex-col text-left px-2">
+              <div className={cn('text-lg font-bold mb-6', children && 'mb-4')}>{titleSlot}</div>
+              {children && <div className="text-sm text-gray600 mb-6">{children}</div>}
             </div>
             <div className="flex w-full gap-2">{buttonSlot}</div>
           </motion.div>
