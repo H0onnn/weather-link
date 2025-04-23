@@ -42,7 +42,7 @@ const FriendList = () => {
                           return (
                             <Modal
                               {...props}
-                              titleSlot={<div className="text-lg font-semibold">정말 삭제할까요?</div>}
+                              titleSlot="정말 삭제할까요?"
                               buttonSlot={
                                 <>
                                   <ModalButton.Secondary className="flex-1" onClick={props.close}>
