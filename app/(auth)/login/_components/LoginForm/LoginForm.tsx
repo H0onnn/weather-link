@@ -1,11 +1,14 @@
 'use client';
 
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
-import { loginSchema } from '@/app/(auth)/login/validator';
+import { loginSchema } from '@/app/(auth)/login/_model/validator';
+import { login } from '@/app/(auth)/login/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
@@ -29,7 +32,16 @@ const LoginForm = () => {
   } = method;
 
   const handleSubmit = submit(async () => {
-    alert(JSON.stringify(getValues()));
+    const { email, password } = getValues();
+
+    const response = await login(email, password);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    redirect('/');
   });
 
   const handleOAuthLogin = (provider: OAuthProvider) => {
