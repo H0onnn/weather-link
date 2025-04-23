@@ -2,7 +2,7 @@ import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/re
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse, isAxiosError } from 'axios';
 
-import { QueryError } from './query';
+import { QueryError } from '@/lib/query';
 
 export const useAppMutation = <
   TMutationKey extends [string, Record<string, unknown>?],
