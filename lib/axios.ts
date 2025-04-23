@@ -14,6 +14,8 @@ export interface ApiResponse<T> {
   data: T | null;
 }
 
+export interface ApiError extends Pick<ApiResponse<null>, 'error' | 'message' | 'statusCode'> {}
+
 type Token = {
   accessToken: string;
   refreshToken: string;
@@ -23,7 +25,6 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
     Accept: 'application/json',
   },
   withCredentials: true,
@@ -46,14 +47,11 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    if (config.data instanceof FormData) {
-      config.headers['Content-Type'] = 'multipart/form-data';
-    }
-
     return config;
   },
   (error: AxiosError) => {
     console.error('axios req error: ', error);
+
     return Promise.reject(error);
   },
 );
@@ -71,7 +69,11 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     console.error('axios res error: ', error);
 
-    if (error.response && error.response.status === 401) {
+    const requestUrl = error.config?.url || '';
+
+    const isAuthEndpoint = requestUrl.includes('/auth');
+
+    if (error.response && error.response.status === 401 && !isAuthEndpoint) {
       console.error('Unauthorized');
       await removeToken();
 
