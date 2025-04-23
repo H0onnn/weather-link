@@ -1,6 +1,6 @@
 'use client';
 
-import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/actions';
+import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/_model/apis';
 import { useTimer } from '@/hooks';
 import { useCallback, useState, useTransition } from 'react';
 import { type Control, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';

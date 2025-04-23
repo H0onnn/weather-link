@@ -3,8 +3,8 @@
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
-import { signup } from '@/app/(auth)/sign-up/actions';
-import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/validator';
+import { signup } from '@/app/(auth)/sign-up/_model/apis';
+import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import Link from 'next/link';
