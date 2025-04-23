@@ -9,9 +9,10 @@ import { type ApiResponse, api } from '@/lib/axios';
  * @param data 회원가입 데이터
  * @returns 회원가입 성공 여부
  */
-export const signup = async (data: FormData): Promise<ApiResponse<User>> => {
+export const signup = async (data: FormData) => {
   try {
-    return await api.post('/auth/signup', data);
+    const response = await api.post<User>('/auth/signup', data);
+    return response;
   } catch (error) {
     console.error('Signup error:', error);
     throw error;
@@ -25,7 +26,7 @@ export const signup = async (data: FormData): Promise<ApiResponse<User>> => {
  */
 export const sendCertEmail = async (email: string) => {
   try {
-    const response = await api.post('/auth/service/signup/sendcode', { email });
+    const response = await api.post<void>('/auth/service/signup/sendcode', { email });
     return response;
   } catch (error) {
     console.error('Send cert email error:', error);
@@ -41,7 +42,7 @@ export const sendCertEmail = async (email: string) => {
  */
 export const verifyCertEmail = async (email: string, code: string) => {
   try {
-    const response = await api.post('/auth/service/signup/verifycode', { email, code });
+    const response = await api.post<void>('/auth/service/signup/verifycode', { email, code });
     return response;
   } catch (error) {
     console.error('Verify cert email error:', error);

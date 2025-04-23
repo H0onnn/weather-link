@@ -6,7 +6,7 @@ const isServer = typeof window === 'undefined';
 
 const API_BASE_URL = isServer ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   success?: boolean;
   statusCode?: number;
   error?: string;
@@ -116,18 +116,17 @@ const makeRequest = async <T, D = any>(
 };
 
 export const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('get', url, undefined, config),
+  get: <T>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('get', url, undefined, config),
 
-  post: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
+  post: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
     makeRequest<T, D>('post', url, data, config),
 
-  put: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
-    makeRequest<T, D>('put', url, data, config),
+  put: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig) => makeRequest<T, D>('put', url, data, config),
 
-  patch: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
+  patch: <T, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
     makeRequest<T, D>('patch', url, data, config),
 
-  delete: <T = any>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('delete', url, undefined, config),
+  delete: <T>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('delete', url, undefined, config),
 };
 
 export default axiosInstance;
