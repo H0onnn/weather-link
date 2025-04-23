@@ -3,11 +3,15 @@
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
+import { signup } from '@/app/(auth)/sign-up/actions';
 import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { Input } from '@/components/Input';
@@ -47,7 +51,35 @@ const SignUpForm = () => {
   } = method;
 
   const handleSubmit = submit(async (data) => {
-    console.info(data);
+    try {
+      const formData = new FormData();
+
+      formData.append('email', data.email);
+      formData.append('password', data.password);
+      formData.append('name', data.name);
+      formData.append('sido', data.location.sido);
+      formData.append('gugun', data.location.gugun);
+      formData.append('termsAgreed', String(data.termsAgreed));
+      formData.append('locationAgreed', String(data.locationAgreed));
+
+      if (data.profileImage && data.profileImage instanceof File) {
+        formData.append('profileImage', data.profileImage);
+        console.log('Adding profileImage to FormData:', data.profileImage);
+      }
+
+      const response = await signup(formData);
+
+      if (response.success) {
+        toast.success('회원가입이 완료되었어요');
+        redirect('/login');
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      }
+
+      toast.error('회원가입 중 에러가 발생했어요');
+    }
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
@@ -120,7 +152,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/도 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="seoul">서울특별시</SelectItem>
+                        <SelectItem value="서울특별시">서울특별시</SelectItem>
                         <SelectItem value="busan">부산광역시</SelectItem>
                         <SelectItem value="incheon">인천광역시</SelectItem>
                         <SelectItem value="daegu">대구광역시</SelectItem>
@@ -143,7 +175,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/군/구 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gangnam">강남구</SelectItem>
+                        <SelectItem value="강남구">강남구</SelectItem>
                         <SelectItem value="gangdong">강동구</SelectItem>
                         <SelectItem value="gangbuk">강북구</SelectItem>
                         <SelectItem value="gangseo">강서구</SelectItem>
