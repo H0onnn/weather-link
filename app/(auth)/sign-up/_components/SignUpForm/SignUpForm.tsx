@@ -6,7 +6,6 @@ import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
 import { signup } from '@/app/(auth)/sign-up/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AxiosError } from 'axios';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';
@@ -65,12 +64,11 @@ const SignUpForm = () => {
       formData.append('name', data.name);
       formData.append('sido', data.location.sido);
       formData.append('gugun', data.location.gugun);
-      formData.append('termsAgreed', String(data.termsAgreed));
-      formData.append('locationAgreed', String(data.locationAgreed));
+      formData.append('termsAgreed', data.termsAgreed as any);
+      formData.append('locationAgreed', data.locationAgreed as any);
 
-      if (data.profileImage && data.profileImage instanceof File) {
+      if (data.profileImage instanceof File && data.profileImage.size > 0) {
         formData.append('profileImage', data.profileImage);
-        console.log('Adding profileImage to FormData:', data.profileImage);
       }
 
       const response = await signup(formData);
@@ -80,10 +78,6 @@ const SignUpForm = () => {
         redirect('/login');
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message);
-      }
-
       toast.error('회원가입 중 에러가 발생했어요');
     }
   });
