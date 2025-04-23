@@ -7,9 +7,10 @@ import { useFormContext } from 'react-hook-form';
 
 interface ProfileImageInputProps {
   name?: string;
+  isDescriptionVisible?: boolean;
 }
 
-const ProfileImageInput = ({ name = 'profileImage' }: ProfileImageInputProps) => {
+const ProfileImageInput = ({ name = 'profileImage', isDescriptionVisible = true }: ProfileImageInputProps) => {
   const { register, setValue } = useFormContext();
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
@@ -51,7 +52,7 @@ const ProfileImageInput = ({ name = 'profileImage' }: ProfileImageInputProps) =>
           <Camera className="w-4 h-4 text-white" />
         </div>
       </div>
-      <p className="text-sm text-gray500 mt-2">프로필 이미지 추가</p>
+      {isDescriptionVisible && <p className="text-sm text-gray500 mt-2">프로필 이미지 추가</p>}
       <input
         type="file"
         className="hidden"
