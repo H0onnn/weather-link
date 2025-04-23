@@ -20,6 +20,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+import { useCityList, useDistrictList } from '@/hooks/queries/locations';
+
 import { OAUTH_PROVIDERS } from '@/constants/oauth';
 
 const defaultValues = {
@@ -42,13 +44,17 @@ const SignUpForm = () => {
     defaultValues,
   });
 
-  const [isVerified, setIsVerified] = useState(false);
-
   const {
     handleSubmit: submit,
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = method;
+
+  const [isVerified, setIsVerified] = useState(false);
+
+  const { data: sidoList } = useCityList();
+  const { data: gugunList } = useDistrictList(watch('location.sido'));
 
   const handleSubmit = submit(async (data) => {
     try {
@@ -152,15 +158,11 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/도 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="서울특별시">서울특별시</SelectItem>
-                        <SelectItem value="busan">부산광역시</SelectItem>
-                        <SelectItem value="incheon">인천광역시</SelectItem>
-                        <SelectItem value="daegu">대구광역시</SelectItem>
-                        <SelectItem value="gwangju">광주광역시</SelectItem>
-                        <SelectItem value="daejeon">대전광역시</SelectItem>
-                        <SelectItem value="ulsan">울산광역시</SelectItem>
-                        <SelectItem value="sejong">세종특별자치시</SelectItem>
-                        <SelectItem value="gyeonggi">경기도</SelectItem>
+                        {sidoList?.data?.map((sido) => (
+                          <SelectItem key={sido.id} value={sido.sido}>
+                            {sido.sido}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
@@ -175,15 +177,11 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/군/구 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="강남구">강남구</SelectItem>
-                        <SelectItem value="gangdong">강동구</SelectItem>
-                        <SelectItem value="gangbuk">강북구</SelectItem>
-                        <SelectItem value="gangseo">강서구</SelectItem>
-                        <SelectItem value="gwanak">관악구</SelectItem>
-                        <SelectItem value="gwangjin">광진구</SelectItem>
-                        <SelectItem value="guro">구로구</SelectItem>
-                        <SelectItem value="geumcheon">금천구</SelectItem>
-                        <SelectItem value="nowon">노원구</SelectItem>
+                        {gugunList?.data?.map((gugun) => (
+                          <SelectItem key={gugun.id} value={gugun.gugun}>
+                            {gugun.gugun}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
