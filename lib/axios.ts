@@ -1,10 +1,23 @@
-import { getToken, removeToken } from '@/actions';
+import { getToken, removeToken, setToken } from '@/actions';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { redirect } from 'next/navigation';
 
 const isServer = typeof window === 'undefined';
 
 const API_BASE_URL = isServer ? process.env.NEXT_API_URL : process.env.NEXT_PUBLIC_API_URL;
+
+export interface ApiResponse<T> {
+  success?: boolean;
+  statusCode?: number;
+  error?: string;
+  message: string;
+  data: T;
+}
+
+type Token = {
+  accessToken: string;
+  refreshToken: string;
+};
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -25,14 +38,10 @@ const axiosInstance: AxiosInstance = axios.create({
 // req interceptor
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // 서버 사이드에서는 getToken으로 쿠키에서 토큰을 가져와 헤더에 추가
-    // 클라이언트 사이드에서는 브라우저가 자동으로 쿠키 처리
-    if (isServer) {
-      const accessToken = await getToken();
+    const accessToken = await getToken();
 
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     return config;
@@ -46,7 +55,16 @@ axiosInstance.interceptors.request.use(
 // res interceptor
 axiosInstance.interceptors.response.use(
   async (response: AxiosResponse) => {
-    return response;
+    if (response.data.success) {
+      if (response.data.data && 'accessToken' in response.data.data) {
+        const { accessToken } = response.data.data as Token;
+        await setToken(accessToken);
+      }
+
+      if (response.data.data) return response;
+    }
+
+    return Promise.reject(response.data);
   },
   async (error: AxiosError) => {
     console.error('axios res error: ', error);
