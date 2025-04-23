@@ -1,5 +1,10 @@
-import { MutationCache, QueryCache, QueryClient, isServer } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryKey, isServer } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+
+export type BaseQueryOptions<TQueryFnData, TQueryKey extends QueryKey> = {
+  queryKey: TQueryKey;
+  queryFn: () => Promise<TQueryFnData>;
+};
 
 const makeQueryClient = () => {
   return new QueryClient({

@@ -1,27 +1,17 @@
 import { QueryKey, UseQueryOptions, UseQueryResult, useQuery } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
 
-export const useAppQuery = <
-  TQueryKey extends [string, Record<string, unknown>?],
-  TQueryFnData,
-  TError = Error,
+import { BaseQueryOptions } from '@/lib/query';
+
+export function useAppQuery<
+  TQueryFnData = unknown,
+  TError = unknown,
   TData = TQueryFnData,
->({
-  queryKey,
-  fetcher,
-  options,
-}: {
-  queryKey: TQueryKey;
-  fetcher: () => Promise<AxiosResponse<TQueryFnData>>;
-  options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, QueryKey>, 'queryKey' | 'queryFn'>;
-}): UseQueryResult<TData, TError> =>
-  useQuery<TQueryFnData, TError, TData>({
-    queryKey,
-    queryFn: async () => {
-      const res = await fetcher();
-
-      return res.data;
-    },
+  TQueryKey extends QueryKey = QueryKey,
+>(
+  options: BaseQueryOptions<TQueryFnData, TQueryKey> &
+    Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>,
+): UseQueryResult<TData, TError> {
+  return useQuery({
     ...options,
-    throwOnError: true,
   });
+}
