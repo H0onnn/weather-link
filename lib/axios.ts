@@ -4,14 +4,14 @@ import { redirect } from 'next/navigation';
 
 const isServer = typeof window === 'undefined';
 
-const API_BASE_URL = isServer ? process.env.NEXT_API_URL : process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = isServer ? process.env.API_BASE_URL : process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T = any> {
   success?: boolean;
   statusCode?: number;
   error?: string;
   message: string;
-  data: T;
+  data: T | null;
 }
 
 type Token = {
@@ -38,10 +38,16 @@ const axiosInstance: AxiosInstance = axios.create({
 // req interceptor
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    console.log('req url: ', config.url);
+
     const accessToken = await getToken();
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    if (config.data instanceof FormData) {
+      config.headers['Content-Type'] = 'multipart/form-data';
     }
 
     return config;
@@ -55,16 +61,12 @@ axiosInstance.interceptors.request.use(
 // res interceptor
 axiosInstance.interceptors.response.use(
   async (response: AxiosResponse) => {
-    if (response.data.success) {
-      if (response.data.data && 'accessToken' in response.data.data) {
-        const { accessToken } = response.data.data as Token;
-        await setToken(accessToken);
-      }
-
-      if (response.data.data) return response;
+    if (response.data?.data && 'accessToken' in response.data.data) {
+      const { accessToken } = response.data.data as Token;
+      await setToken(accessToken);
     }
 
-    return Promise.reject(response.data);
+    return response;
   },
   async (error: AxiosError) => {
     console.error('axios res error: ', error);
@@ -84,21 +86,48 @@ axiosInstance.interceptors.response.use(
   },
 );
 
+const makeRequest = async <T, D = any>(
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+  url: string,
+  data?: D,
+  config?: AxiosRequestConfig,
+) => {
+  try {
+    const apiCall = () => {
+      switch (method) {
+        case 'get':
+          return axiosInstance.get<ApiResponse<T>>(url, config);
+        case 'post':
+          return axiosInstance.post<ApiResponse<T>>(url, data, config);
+        case 'put':
+          return axiosInstance.put<ApiResponse<T>>(url, data, config);
+        case 'patch':
+          return axiosInstance.patch<ApiResponse<T>>(url, data, config);
+        case 'delete':
+          return axiosInstance.delete<ApiResponse<T>>(url, config);
+      }
+    };
+
+    const response = await apiCall();
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    axiosInstance.get<T>(url, config),
+  get: <T = any>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('get', url, undefined, config),
 
-  post: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    axiosInstance.post<T, AxiosResponse<T>, D>(url, data, config),
+  post: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
+    makeRequest<T, D>('post', url, data, config),
 
-  put: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    axiosInstance.put<T, AxiosResponse<T>, D>(url, data, config),
+  put: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
+    makeRequest<T, D>('put', url, data, config),
 
-  patch: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    axiosInstance.patch<T, AxiosResponse<T>, D>(url, data, config),
+  patch: <T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig) =>
+    makeRequest<T, D>('patch', url, data, config),
 
-  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    axiosInstance.delete<T>(url, config),
+  delete: <T = any>(url: string, config?: AxiosRequestConfig) => makeRequest<T>('delete', url, undefined, config),
 };
 
 export default axiosInstance;
