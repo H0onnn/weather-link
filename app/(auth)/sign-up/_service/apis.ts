@@ -2,7 +2,7 @@
 
 import type { User } from '@/types/user';
 
-import { type ApiResponse, api } from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 /**
  * 회원가입
