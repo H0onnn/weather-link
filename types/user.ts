@@ -1,3 +1,5 @@
+import { Location } from './location';
+
 type RegisterType = 'email' | 'kakao' | 'google' | 'naver';
 
 export type User = {
