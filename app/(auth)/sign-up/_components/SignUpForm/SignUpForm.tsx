@@ -56,30 +56,29 @@ const SignUpForm = () => {
   const { data: gugunList } = useDistrictList(watch('location.sido'));
 
   const handleSubmit = submit(async (data) => {
-    try {
-      const formData = new FormData();
+    const formData = new FormData();
 
-      formData.append('email', data.email);
-      formData.append('password', data.password);
-      formData.append('name', data.name);
-      formData.append('sido', data.location.sido);
-      formData.append('gugun', data.location.gugun);
-      formData.append('termsAgreed', data.termsAgreed as any);
-      formData.append('locationAgreed', data.locationAgreed as any);
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('name', data.name);
+    formData.append('sido', data.location.sido);
+    formData.append('gugun', data.location.gugun);
+    formData.append('termsAgreed', String(data.termsAgreed));
+    formData.append('locationAgreed', String(data.locationAgreed));
 
-      if (data.profileImage instanceof File && data.profileImage.size > 0) {
-        formData.append('profileImage', data.profileImage);
-      }
-
-      const response = await signup(formData);
-
-      if (response.success) {
-        toast.success('회원가입이 완료되었어요');
-        redirect('/login');
-      }
-    } catch (error) {
-      toast.error('회원가입 중 에러가 발생했어요');
+    if (data.profileImage instanceof File && data.profileImage.size > 0) {
+      formData.append('profileImage', data.profileImage);
     }
+
+    const response = await signup(formData);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    toast.success('회원가입이 완료되었어요');
+    redirect('/login');
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {

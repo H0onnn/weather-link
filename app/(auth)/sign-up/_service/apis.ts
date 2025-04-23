@@ -1,6 +1,6 @@
-'use server';
-
 import type { User } from '@/types/user';
+
+import { parseAxiosError } from '@/utils/error';
 
 import { api } from '@/lib/axios';
 
@@ -14,8 +14,11 @@ export const signup = async (data: FormData) => {
     const response = await api.post<User>('/auth/signup', data);
     return response;
   } catch (error) {
-    console.error('Signup error:', error);
-    throw error;
+    const parsed = parseAxiosError(error);
+    return {
+      success: false,
+      ...parsed,
+    };
   }
 };
 
@@ -29,8 +32,11 @@ export const sendCertEmail = async (email: string) => {
     const response = await api.post<void>('/auth/service/signup/sendcode', { email });
     return response;
   } catch (error) {
-    console.error('Send cert email error:', error);
-    throw error;
+    const parsed = parseAxiosError(error);
+    return {
+      success: false,
+      ...parsed,
+    };
   }
 };
 
@@ -45,7 +51,10 @@ export const verifyCertEmail = async (email: string, code: string) => {
     const response = await api.post<void>('/auth/service/signup/verifycode', { email, code });
     return response;
   } catch (error) {
-    console.error('Verify cert email error:', error);
-    throw error;
+    const parsed = parseAxiosError(error);
+    return {
+      success: false,
+      ...parsed,
+    };
   }
 };
