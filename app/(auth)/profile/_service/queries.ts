@@ -1,15 +1,24 @@
 import { updateProfile } from '@/app/(auth)/profile/_service/apis';
+import { getUserData } from '@/services/apis/users';
 import { toast } from 'sonner';
+
+import { useAppMutation, useAppQuery } from '@/hooks/queries';
 
 import { parseAxiosError } from '@/utils/error';
 
 import { getQueryClient } from '@/lib/query';
 
-import { useAppMutation, useAppQuery } from '../common';
-import { userKeys, userQueryOptions } from './queries';
+const userKeys = {
+  all: ['users'] as const,
+  my: () => [...userKeys.all, 'my'] as const,
+};
 
 export const useMyUserInfo = () => {
-  return useAppQuery(userQueryOptions.my());
+  return useAppQuery({
+    queryKey: userKeys.my(),
+    queryFn: () => getUserData(),
+    staleTime: Infinity,
+  });
 };
 
 export const useUpdateProfile = () => {

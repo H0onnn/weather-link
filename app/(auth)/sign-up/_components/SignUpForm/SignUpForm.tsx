@@ -5,6 +5,7 @@ import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthB
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
 import { signup } from '@/app/(auth)/sign-up/_service/apis';
+import { useCityList, useDistrictList } from '@/services/queries/locations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -18,8 +19,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-import { useCityList, useDistrictList } from '@/hooks/queries/locations';
 
 import { OAUTH_PROVIDERS } from '@/constants/oauth';
 

@@ -2,14 +2,13 @@
 
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { type UpdateProfileSchema, updateProfileSchema } from '@/app/(auth)/profile/_model/valdator';
+import { useMyUserInfo, useUpdateProfile } from '@/app/(auth)/profile/_service/queries';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, Mail, MapPin, Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
-
-import { useMyUserInfo, useUpdateProfile } from '@/hooks/queries/users';
 
 import { NAME_MAX_LENGTH } from '@/constants/valid';
 
