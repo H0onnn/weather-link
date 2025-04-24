@@ -1,3 +1,7 @@
+export type AirQualityEnum = '좋음' | '보통' | '나쁨' | '매우 나쁨';
+export type SkyConditionEnum = '맑음' | '보통' | '구름많음' | '흐림';
+export type PrecipitationTypeEnum = '없음' | '비' | '비/눈' | '눈' | '소나기';
+
 /**
  * 오늘의 날씨
  */
@@ -18,14 +22,14 @@ type CurrentWeather = {
 
 type AirQuality = {
   pm10: string; // 미세먼지 농도
-  pm10Grade: string; // 미세먼지 등급 ex) 좋음, 보통, 나쁨, 매우 나쁨
+  pm10Grade: AirQualityEnum; // 미세먼지 등급
   pm25: string; // 초미세먼지 농도
-  pm25Grade: string; // 초미세먼지 등급 ex) 좋음, 보통, 나쁨, 매우 나쁨
+  pm25Grade: AirQualityEnum; // 초미세먼지 등급
 };
 
 type Forecast = {
-  skyCondition: string; // 하늘 상태 ex) 맑음, 구름 많음, 흐림
-  precipitationType: string; // 강수 형태 ex) 비, 눈, 소나기
+  skyCondition: SkyConditionEnum; // 하늘 상태
+  precipitationType: PrecipitationTypeEnum; // 강수 형태
 };
 
 /**
@@ -40,8 +44,8 @@ type HourlyForecasts = {
   time: string; // 24시간제 ex) 17:00
   temperature: string; // 기온 C
   rainfall: string; // 강수 확률 %
-  sky: string; // 하늘 상태 ex) 맑음, 구름 많음, 흐림
-  rainType: string; // 강수 형태 ex) 비, 눈, 소나기
+  sky: SkyConditionEnum; // 하늘 상태
+  rainType: PrecipitationTypeEnum; // 강수 형태
 };
 
 /**
