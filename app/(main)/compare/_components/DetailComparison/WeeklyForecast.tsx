@@ -1,4 +1,4 @@
-import { weeklyWeatherMock } from '@/app/compare/mock';
+import { weeklyWeatherMock } from '@/app/(main)/compare/mock';
 
 import { WeatherIcon } from '@/components/WeatherIcon';
 
