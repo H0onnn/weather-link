@@ -14,7 +14,11 @@ export interface ApiResponse<T> {
   data: T | null;
 }
 
-export interface ApiError extends Pick<ApiResponse<null>, 'error' | 'message' | 'statusCode'> {}
+export interface ApiError extends ApiResponse<null> {
+  error: string;
+  message: string;
+  statusCode: number;
+}
 
 type Token = {
   accessToken: string;

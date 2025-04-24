@@ -19,10 +19,16 @@ export default function ProfileManagePage() {
     try {
       await fn();
       await removeToken();
+
+      if (type === 'withdraw') {
+        toast.success('탈퇴가 완료되었어요', {
+          description: '그동안 이용해주셔서 감사합니다. 나중에 다시 만나요!',
+        });
+      }
+
       signOut({ callbackUrl: '/login', redirect: true });
       queryClient.clear();
-      type === 'withdraw' && toast.success('탈퇴가 완료되었어요');
-    } catch (error) {
+    } catch {
       toast.error('예상치 못한 오류가 발생했어요', {
         description: '잠시 후 다시 시도해주세요.',
       });
