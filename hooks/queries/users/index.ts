@@ -1,1 +1,1 @@
-export { useMyUserInfo } from './useUserQueries';
+export { useMyUserInfo, useUpdateProfile } from './useUserQueries';

@@ -13,4 +13,4 @@ const userQueryOptions = {
   }),
 };
 
-export { userQueryOptions };
+export { userKeys, userQueryOptions };
