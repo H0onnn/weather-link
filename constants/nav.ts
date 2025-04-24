@@ -31,7 +31,7 @@ const NAV_ITEMS = [
   },
   {
     href: PATH.profile,
-    activeSegment: '(auth)',
+    activeSegment: 'profile',
     activeIcon: '/icons/nav/profile-active.svg',
     inactiveIcon: '/icons/nav/profile.svg',
     label: '마이',
