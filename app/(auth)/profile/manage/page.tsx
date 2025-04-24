@@ -23,7 +23,9 @@ export default function ProfileManagePage() {
       queryClient.clear();
       type === 'withdraw' && toast.success('탈퇴가 완료되었어요');
     } catch (error) {
-      toast.error('예상치 못한 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+      toast.error('예상치 못한 오류가 발생했어요', {
+        description: '잠시 후 다시 시도해주세요.',
+      });
     }
   };
 
