@@ -31,7 +31,6 @@ const axiosInstance: AxiosInstance = axios.create({
   // fetch adapter
   adapter: 'fetch',
   fetchOptions: {
-    cache: 'force-cache',
     credentials: 'include',
   },
 } satisfies AxiosRequestConfig);
