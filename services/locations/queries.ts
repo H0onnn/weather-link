@@ -1,6 +1,6 @@
-import { getGugun, getSido } from '@/services/apis/locations';
-
 import { useAppQuery } from '@/hooks/queries';
+
+import { getGugun, getSido } from './apis';
 
 const locationKeys = {
   all: ['locations'] as const,
