@@ -1,6 +1,7 @@
 'use client';
 
-import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/actions';
+import { sendFindPasswordCertEmail, verifyFindPasswordCertCode } from '@/app/(auth)/find-password/_service/apis';
+import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/_service/apis';
 import { useTimer } from '@/hooks';
 import { useCallback, useState, useTransition } from 'react';
 import { type Control, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
@@ -192,7 +193,6 @@ const SEND_BUTTON_TEXT = {
   resend: '재전송',
 };
 
-// TODO: api
 const SEND_FUNCTION = {
   signUp: (email: string) => {
     console.info('Sending verification code to:', email);
@@ -200,7 +200,7 @@ const SEND_FUNCTION = {
   },
   passwordReset: (email: string) => {
     console.info('Sending password reset code to:', email);
-    return Promise.resolve(true);
+    return sendFindPasswordCertEmail(email);
   },
 } as const;
 
@@ -211,6 +211,6 @@ const VERIFY_FUNCTION = {
   },
   passwordReset: (email: string, code: string) => {
     console.info('Verifying password reset code:', code, 'for email:', email);
-    return Promise.resolve(code === '123456');
+    return verifyFindPasswordCertCode(email, code);
   },
 } as const;

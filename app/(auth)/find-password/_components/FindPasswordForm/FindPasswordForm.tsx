@@ -1,10 +1,13 @@
 'use client';
 
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
-import { type FindPasswordFormSchema, findPasswordSchema } from '@/app/(auth)/find-password/validator';
+import { type FindPasswordFormSchema, findPasswordSchema } from '@/app/(auth)/find-password/_model/validator';
+import { changePassword } from '@/app/(auth)/find-password/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
@@ -16,6 +19,7 @@ const defaultValues = {
 };
 
 const FindPasswordForm = () => {
+  const router = useRouter();
   const method = useForm<FindPasswordFormSchema>({
     resolver: zodResolver(findPasswordSchema),
     defaultValues,
@@ -30,7 +34,17 @@ const FindPasswordForm = () => {
   } = method;
 
   const handleSubmit = submit(async (data) => {
-    console.info(data);
+    const response = await changePassword(data);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    toast.success('비밀번호가 변경되었어요', {
+      description: '변경된 비밀번호로 로그인해주세요',
+    });
+    router.push('/login');
   });
 
   return (
@@ -74,7 +88,7 @@ const FindPasswordForm = () => {
                 autoComplete="new-password"
               />
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" className="w-full" isLoading={isSubmitting}>
                 변경하기
               </Button>
             </>
