@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { getQueryClient } from '@/lib/query';
 
-export default function QueryProvider({ children }: { children: React.ReactNode }) {
+export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = getQueryClient();
 
   return (
@@ -15,4 +15,4 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
-}
+};

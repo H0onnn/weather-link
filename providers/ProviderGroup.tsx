@@ -4,7 +4,8 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { OverlayProvider } from 'overlay-kit';
 import { type ReactNode } from 'react';
 
-import QueryProvider from './QueryProvider';
+import { QueryProvider } from './QueryProvider';
+import { SessionProvider } from './SessionProvider';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -12,11 +13,13 @@ type ProvidersProps = {
 
 const Providers = ({ children }: ProvidersProps) => {
   return (
-    <QueryProvider>
-      <OverlayProvider>
-        <NuqsAdapter>{children}</NuqsAdapter>
-      </OverlayProvider>
-    </QueryProvider>
+    <SessionProvider>
+      <QueryProvider>
+        <OverlayProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </OverlayProvider>
+      </QueryProvider>
+    </SessionProvider>
   );
 };
 
