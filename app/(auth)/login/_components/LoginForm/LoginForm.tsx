@@ -2,8 +2,8 @@
 
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { loginSchema } from '@/app/(auth)/login/_model/validator';
-import { login } from '@/app/(auth)/login/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -34,10 +34,14 @@ const LoginForm = () => {
   const handleSubmit = submit(async () => {
     const { email, password } = getValues();
 
-    const response = await login(email, password);
+    const response = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
 
-    if (!response.success) {
-      toast.error(response.message);
+    if (response?.error) {
+      toast.error(response.error);
       return;
     }
 
