@@ -80,7 +80,7 @@ const LoginForm = () => {
             autoComplete="current-password"
             error={errors.password?.message}
           />
-          <Button type="submit" disabled={isSubmitting} className="mt-[14px]">
+          <Button type="submit" disabled={isSubmitting} className="mt-[14px]" isLoading={isSubmitting}>
             로그인
           </Button>
         </form>

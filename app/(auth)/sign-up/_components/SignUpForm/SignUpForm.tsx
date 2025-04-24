@@ -220,7 +220,12 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting || !isVerified}>
+          <Button
+            type="submit"
+            className="w-full mt-[30px]"
+            disabled={isSubmitting || !isVerified}
+            isLoading={isSubmitting}
+          >
             회원가입
           </Button>
         </form>

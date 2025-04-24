@@ -43,29 +43,60 @@ const animationProps = {
 interface ButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isAnimated?: boolean;
+  isLoading?: boolean;
 }
 
 const MotionButton = motion.button;
 const MotionSlot = motion.create(Slot);
 
-function Button({ className, variant, size, asChild = false, isAnimated = true, ...props }: ButtonProps) {
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  isAnimated = true,
+  isLoading = false,
+  children,
+  ...props
+}: ButtonProps) {
   if (isAnimated) {
     const motionProps = {
       ...animationProps,
       className: cn(buttonVariants({ variant, size, className })),
       'data-slot': 'button',
+      disabled: isLoading || props.disabled,
       ...props,
     } as HTMLMotionProps<'button'>;
 
     if (asChild) {
-      return <MotionSlot {...motionProps} />;
+      return <MotionSlot {...motionProps}>{isLoading ? <LoadingFallback /> : children}</MotionSlot>;
     }
-    return <MotionButton {...motionProps} />;
+    return <MotionButton {...motionProps}>{isLoading ? <LoadingFallback /> : children}</MotionButton>;
   }
 
   const Comp = asChild ? Slot : 'button';
-  return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+  return (
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      disabled={isLoading || props.disabled}
+      {...props}
+    >
+      {isLoading ? <LoadingFallback /> : children}
+    </Comp>
+  );
 }
+
+const LoadingFallback = () => {
+  return (
+    <div className="flex space-x-2 justify-center items-center">
+      <span className="sr-only">Loading...</span>
+      <div className="h-2 w-2 bg-white/50 rounded-full animate-bounce [animation-delay:-0.3s]" />
+      <div className="h-2 w-2 bg-white/60 rounded-full animate-bounce [animation-delay:-0.15s]" />
+      <div className="h-2 w-2 bg-white/70 rounded-full animate-bounce" />
+    </div>
+  );
+};
 
 export { Button, buttonVariants };
 export type { ButtonProps };
