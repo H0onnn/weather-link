@@ -5,12 +5,19 @@ import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { UserAvatar } from '@/components/UserAvatar';
+
 interface ProfileImageInputProps {
   name?: string;
   isDescriptionVisible?: boolean;
+  defaultImage?: string;
 }
 
-const ProfileImageInput = ({ name = 'profileImage', isDescriptionVisible = true }: ProfileImageInputProps) => {
+const ProfileImageInput = ({
+  name = 'profileImage',
+  isDescriptionVisible = true,
+  defaultImage,
+}: ProfileImageInputProps) => {
   const { register, setValue } = useFormContext();
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
@@ -44,7 +51,11 @@ const ProfileImageInput = ({ name = 'profileImage', isDescriptionVisible = true 
             <Image src={previewUrl} alt="프로필 이미지" className="w-full h-full object-cover" width={96} height={96} />
           ) : (
             <div className="flex items-center justify-center w-full h-full bg-gray-100">
-              <User className="w-12 h-12 text-gray-400" />
+              {defaultImage ? (
+                <UserAvatar imageUrl={defaultImage} className="w-[96px] h-[96px]" />
+              ) : (
+                <User className="w-12 h-12 text-gray-400" />
+              )}
             </div>
           )}
         </div>

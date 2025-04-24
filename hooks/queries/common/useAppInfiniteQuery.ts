@@ -1,6 +1,6 @@
 import { QueryKey, UseInfiniteQueryOptions, UseInfiniteQueryResult, useInfiniteQuery } from '@tanstack/react-query';
 
-export const useAppInfiniteQuery = <
+export function useAppInfiniteQuery<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
@@ -8,8 +8,8 @@ export const useAppInfiniteQuery = <
   TPageParam = unknown,
 >(
   options: UseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey, TPageParam>,
-): UseInfiniteQueryResult<TData, TError> => {
+): UseInfiniteQueryResult<TData, TError> {
   return useInfiniteQuery({
     ...options,
   });
-};
+}

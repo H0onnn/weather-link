@@ -30,7 +30,7 @@ export default async function RootLayout({
     <html lang="ko">
       <body className={cn(pretendard.className, 'bg-background')}>
         <Layout>{children}</Layout>
-        <Toaster richColors={true} />
+        <Toaster richColors={true} position="top-center" />
       </body>
     </html>
   );

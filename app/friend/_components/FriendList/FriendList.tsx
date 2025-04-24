@@ -3,7 +3,6 @@
 import { EllipsisVertical, LucideTrash2 } from 'lucide-react';
 import { overlay } from 'overlay-kit';
 
-import { Button as ModalButton } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { DropdownMenu } from '@/components/DropdownMenu/DropdownMenu';
 import { Modal } from '@/components/Modal';
@@ -45,12 +44,12 @@ const FriendList = () => {
                               titleSlot="정말 삭제할까요?"
                               buttonSlot={
                                 <>
-                                  <ModalButton.Secondary className="flex-1" onClick={props.close}>
+                                  <Button variant="secondary" className="flex-1" onClick={props.close}>
                                     아니오
-                                  </ModalButton.Secondary>
-                                  <ModalButton.Warn className="flex-1" onClick={props.close}>
+                                  </Button>
+                                  <Button variant="warn" className="flex-1" onClick={props.close}>
                                     네, 삭제할래요
-                                  </ModalButton.Warn>
+                                  </Button>
                                 </>
                               }
                             >

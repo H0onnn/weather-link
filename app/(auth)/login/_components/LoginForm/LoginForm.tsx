@@ -1,11 +1,14 @@
 'use client';
 
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
-import { loginSchema } from '@/app/(auth)/login/validator';
+import { loginSchema } from '@/app/(auth)/login/_model/validator';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
@@ -29,7 +32,20 @@ const LoginForm = () => {
   } = method;
 
   const handleSubmit = submit(async () => {
-    alert(JSON.stringify(getValues()));
+    const { email, password } = getValues();
+
+    const response = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (response?.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    redirect('/');
   });
 
   const handleOAuthLogin = (provider: OAuthProvider) => {
@@ -64,7 +80,7 @@ const LoginForm = () => {
             autoComplete="current-password"
             error={errors.password?.message}
           />
-          <Button type="submit" disabled={isSubmitting} className="mt-[14px]">
+          <Button type="submit" disabled={isSubmitting} className="mt-[14px]" isLoading={isSubmitting}>
             로그인
           </Button>
         </form>
