@@ -1,4 +1,7 @@
-import { hourlyWeatherMock } from '@/app/(main)/compare/mock';
+'use client';
+
+import { useHourlyWeather } from '@/app/(main)/_service/queries';
+import { parseAsString, useQueryStates } from 'nuqs';
 
 import { WeatherIcon } from '@/components/WeatherIcon';
 
@@ -6,36 +9,47 @@ import { getIsNight } from '@/utils/time';
 import { getWeatherIconType } from '@/utils/weather';
 
 interface HourlyForecastProps {
-  myLocationData?: typeof hourlyWeatherMock;
-  compareLocationData?: typeof hourlyWeatherMock;
+  myLocation: {
+    city: string;
+    district: string;
+  };
 }
 
-const HourlyForecast = ({
-  myLocationData = hourlyWeatherMock,
-  compareLocationData = {
-    location: '부산광역시 무슨구',
-    forecasts: hourlyWeatherMock.forecasts.map((forecast) => ({
-      ...forecast,
-      temperature: (parseInt(forecast.temperature) - 2).toString(),
-      sky: forecast.sky === '맑음' ? '구름 조금' : forecast.sky,
-    })),
-  },
-}: HourlyForecastProps) => {
+const HourlyForecast = ({ myLocation }: HourlyForecastProps) => {
+  const [compareLocation] = useQueryStates({
+    city: parseAsString,
+    district: parseAsString,
+  });
+
+  const { data: myWeather, isFetching: isMyWeatherFetching } = useHourlyWeather(myLocation.city, myLocation.district);
+  const { data: compareWeather, isFetching: isCompareWeatherFetching } = useHourlyWeather(
+    compareLocation.city || '',
+    compareLocation.district || '',
+  );
+
+  if (isMyWeatherFetching || isCompareWeatherFetching) return <Skeleton />;
+
+  if (!myWeather || !compareWeather) return null;
+
   return (
     <div className="bg-white rounded-[16px] p-4 shadow-shadow1">
       <div className="grid grid-cols-3 gap-4 mb-2">
         {/* 내 위치 */}
-        <span className="text-center text-sm font-medium truncate">{myLocationData.location}</span>
+        <span className="text-center text-sm font-medium truncate">
+          {myLocation.city} {myLocation.district}
+        </span>
 
         <span className="text-center text-sm text-gray500">시간</span>
 
         {/* 비교 위치 */}
-        <span className="text-center text-sm font-medium truncate">{compareLocationData.location}</span>
+        <span className="text-center text-sm font-medium truncate">
+          {compareLocation.city} {compareLocation.district}
+        </span>
       </div>
 
       <div className="max-h-[300px] overflow-x-hidden overflow-y-auto">
-        {myLocationData.forecasts.map((myForecast, index) => {
-          const compareForeast = compareLocationData.forecasts[index];
+        {myWeather.forecasts.map((myForecast, index) => {
+          const compareForeast = compareWeather.forecasts[index];
           const myIconType = getWeatherIconType(myForecast.sky, myForecast.rainType, getIsNight(myForecast.time));
 
           const compareIconType = getWeatherIconType(
@@ -62,6 +76,38 @@ const HourlyForecast = ({
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+};
+
+const Skeleton = () => {
+  return (
+    <div className="bg-white rounded-[16px] p-4 shadow-shadow1">
+      <div className="grid grid-cols-3 gap-4 mb-2">
+        <div className="h-5 bg-gray-200 rounded-md animate-pulse mx-auto w-20" />
+
+        <div className="h-5 bg-gray-200 rounded-md animate-pulse mx-auto w-12" />
+
+        <div className="h-5 bg-gray-200 rounded-md animate-pulse mx-auto w-20" />
+      </div>
+
+      <div className="max-h-[300px] overflow-x-hidden overflow-y-auto">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={`skeleton-hour-${index}`} className="grid grid-cols-3 items-center py-2">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
+              <div className="w-8 h-6 bg-gray-200 rounded-md animate-pulse" />
+            </div>
+
+            <div className="mx-auto w-12 h-4 bg-gray-200 rounded-md animate-pulse" />
+
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
+              <div className="w-8 h-6 bg-gray-200 rounded-md animate-pulse" />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
