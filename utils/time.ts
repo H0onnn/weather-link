@@ -3,9 +3,15 @@ import 'dayjs/locale/ko';
 
 dayjs.locale('ko');
 
-export const getIsNight = (timeString: string) => {
-  const hour = parseInt(timeString.split(':')[0]);
-  return hour >= 18 || hour < 6;
+export const getIsNight = (timeString?: string) => {
+  if (timeString) {
+    const hour = parseInt(timeString.split(':')[0]);
+    return hour >= 20 || hour < 6;
+  }
+
+  const now = dayjs();
+  const hour = now.hour();
+  return hour >= 20 || hour < 6;
 };
 
 export const getMonthDayWeekday = (dateString: string) => {
