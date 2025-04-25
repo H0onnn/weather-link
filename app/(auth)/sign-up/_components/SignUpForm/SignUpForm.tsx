@@ -5,6 +5,7 @@ import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthB
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
 import { signup } from '@/app/(auth)/sign-up/_service/apis';
+import { useCityList, useDistrictList } from '@/services/locations/queries';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -18,8 +19,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-import { useCityList, useDistrictList } from '@/hooks/queries/locations';
 
 import { OAUTH_PROVIDERS } from '@/constants/oauth';
 
@@ -151,7 +150,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/도 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {sidoList?.data?.map((sido) => (
+                        {sidoList.map((sido) => (
                           <SelectItem key={sido.id} value={sido.sido}>
                             {sido.sido}
                           </SelectItem>
@@ -170,7 +169,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/군/구 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {gugunList?.data?.map((gugun) => (
+                        {gugunList?.map((gugun) => (
                           <SelectItem key={gugun.id} value={gugun.gugun}>
                             {gugun.gugun}
                           </SelectItem>

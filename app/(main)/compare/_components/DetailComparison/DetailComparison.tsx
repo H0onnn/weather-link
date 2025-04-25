@@ -1,9 +1,24 @@
+'use client';
+
+import { parseAsString, useQueryState } from 'nuqs';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import HourlyForecast from './HourlyForecast';
 import WeeklyForecast from './WeeklyForecast';
 
-const DetailComparison = () => {
+interface DetailComparisonProps {
+  myLocation: {
+    city: string;
+    district: string;
+  };
+}
+
+const DetailComparison = ({ myLocation }: DetailComparisonProps) => {
+  const [district] = useQueryState('district', parseAsString);
+
+  if (!district) return null;
+
   return (
     <div className="mt-8">
       <Tabs defaultValue="today" className="w-full">
@@ -23,10 +38,10 @@ const DetailComparison = () => {
         </TabsList>
 
         <TabsContent value="today" className="mt-4">
-          <HourlyForecast />
+          <HourlyForecast myLocation={myLocation} />
         </TabsContent>
         <TabsContent value="weekly" className="mt-4">
-          <WeeklyForecast />
+          <WeeklyForecast myLocation={myLocation} />
         </TabsContent>
       </Tabs>
     </div>
