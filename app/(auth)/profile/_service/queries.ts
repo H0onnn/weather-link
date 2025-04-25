@@ -1,7 +1,7 @@
 import { getUserData, updateProfile } from '@/app/(auth)/profile/_service/apis';
 import { toast } from 'sonner';
 
-import { useAppMutation, useAppSuspenseQuery } from '@/hooks/queries';
+import { useAppMutation, useAppQuery } from '@/hooks/queries';
 
 import { parseAxiosError } from '@/utils/error';
 
@@ -13,7 +13,7 @@ export const userKeys = {
 };
 
 export const useMyUserInfo = () => {
-  return useAppSuspenseQuery({
+  return useAppQuery({
     queryKey: userKeys.my(),
     queryFn: getUserData,
     staleTime: Infinity,

@@ -1,5 +1,4 @@
-import { MutationCache, QueryCache, QueryClient, QueryKey, isServer } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
+import { QueryClient, QueryKey, isServer } from '@tanstack/react-query';
 
 export type BaseQueryOptions<TQueryFnData, TQueryKey extends QueryKey> = {
   queryKey: TQueryKey;
@@ -15,27 +14,17 @@ const makeQueryClient = () => {
         staleTime: 60 * 1000,
         throwOnError: true,
       },
+      // dehydrate: {
+      //   shouldDehydrateQuery: (query) =>
+      //     defaultShouldDehydrateQuery(query) ||
+      //     // pending 상태의 쿼리도 dehydrate에 포함하여 데이터를 전송
+      //     query.state.status === 'pending',
+      //   shouldRedactErrors: (error) => {
+      //     console.error('query client error', error);
+      //     return false;
+      //   },
+      // },
     },
-    queryCache: new QueryCache({
-      onError: (error: unknown) => {
-        if (isAxiosError(error)) {
-        }
-
-        if (error instanceof QueryError) {
-        }
-
-        throw error;
-      },
-    }),
-
-    mutationCache: new MutationCache({
-      onError: (error) => {
-        if (error instanceof QueryError) {
-        }
-
-        throw error;
-      },
-    }),
   });
 };
 
@@ -52,18 +41,3 @@ export const getQueryClient = () => {
     return browserQueryClient;
   }
 };
-
-/**
- * 커스텀 에러 클래스
- */
-export class QueryError extends Error {
-  responseCode: string;
-  message: string;
-
-  constructor(responseCode: string, message: string) {
-    super();
-
-    this.responseCode = responseCode;
-    this.message = message;
-  }
-}

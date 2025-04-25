@@ -17,6 +17,8 @@ import { cn } from '@/lib/utils';
 const UserInfo = () => {
   const { data: user } = useMyUserInfo();
 
+  if (!user) return null;
+
   const defaultValues = {
     name: user.name || '',
     profileImage: user.profileImage || '',
