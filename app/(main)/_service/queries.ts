@@ -26,7 +26,6 @@ export const useTodayWeather = (city: string, district: string) => {
     enabled: !!city && !!district,
     select: (data) => {
       const response = data.data;
-      if (!response) return null;
 
       const currentWeather = response.currentWeather;
 
@@ -51,7 +50,6 @@ export const useHourlyWeather = (city: string, district: string) => {
     enabled: !!city && !!district,
     select: (data) => {
       const response = data.data;
-      if (!response) return null;
 
       const forecasts = response.forecasts;
 

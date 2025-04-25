@@ -14,8 +14,6 @@ export default async function Home() {
   const queryClient = getQueryClient();
   const { data: user } = await getUserData();
 
-  if (!user) return null;
-
   const city = user.location.sido;
   const district = user.location.gugun;
 
