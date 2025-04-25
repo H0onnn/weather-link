@@ -1,3 +1,5 @@
+import type { PrecipitationTypeEnum, SkyConditionEnum } from '@/app/(main)/_model/types';
+
 import type { WeatherIconType } from '@/constants/weather-icons';
 
 /**
@@ -36,4 +38,22 @@ export const getWeatherIconType = (skyCondition: string, rainType: string, isNig
   }
 
   return isNight ? 'NIGHT' : 'SUNNY';
+};
+
+export const separateWeatherInfo = (skyAndPre: PrecipitationTypeEnum | SkyConditionEnum) => {
+  const precipitationTypes = ['없음', '비', '비/눈', '눈', '소나기'] as PrecipitationTypeEnum[];
+
+  const isPrecipitation = precipitationTypes.some((type) => skyAndPre.includes(type));
+
+  if (isPrecipitation) {
+    return {
+      skyCondition: '흐림', // 강수가 있으면 일반적으로 하늘은 흐리다고 판단
+      rainType: skyAndPre,
+    };
+  }
+
+  return {
+    skyCondition: skyAndPre,
+    rainType: '없음',
+  };
 };

@@ -1,13 +1,12 @@
 'use client';
 
-import type { PrecipitationTypeEnum, SkyConditionEnum } from '@/app/(main)/_model/types';
 import { useWeeklyForecast } from '@/app/(main)/_service/queries';
 import Image from 'next/image';
 import { Fragment } from 'react';
 
 import { WeatherIcon } from '@/components/WeatherIcon';
 
-import { getWeatherIconType } from '@/utils/weather';
+import { getWeatherIconType, separateWeatherInfo } from '@/utils/weather';
 
 import { cn } from '@/lib/utils';
 
@@ -15,24 +14,6 @@ interface WeeklyForecastProps {
   city: string;
   district: string;
 }
-
-const separateWeatherInfo = (skyAndPre: PrecipitationTypeEnum | SkyConditionEnum) => {
-  const precipitationTypes = ['없음', '비', '비/눈', '눈', '소나기'] as PrecipitationTypeEnum[];
-
-  const isPrecipitation = precipitationTypes.some((type) => skyAndPre.includes(type));
-
-  if (isPrecipitation) {
-    return {
-      skyCondition: '흐림', // 강수가 있으면 일반적으로 하늘은 흐리다고 판단
-      rainType: skyAndPre,
-    };
-  }
-
-  return {
-    skyCondition: skyAndPre,
-    rainType: '없음',
-  };
-};
 
 const WeeklyForecast = ({ city, district }: WeeklyForecastProps) => {
   const { data: weeklyData, isLoading } = useWeeklyForecast(city, district);
