@@ -44,7 +44,6 @@ export const useTodayWeather = (city: string, district: string) => {
   });
 };
 
-// TODO: 현재 시각 기준으로 24시간 데이터를 받아오나, 기상청 먹통으로 수정 해야할 수 있음
 export const useHourlyWeather = (city: string, district: string) => {
   return useAppQuery({
     queryKey: weatherKeys.hourly(city, district),
@@ -61,7 +60,6 @@ export const useHourlyWeather = (city: string, district: string) => {
           ...forecast,
           time: dayjs(forecast.time).format('HH:mm'),
         })),
-        isNowIndex: forecasts.findIndex((forecast) => dayjs().hour() === dayjs(forecast.time).hour()),
       };
     },
   });

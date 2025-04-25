@@ -2,14 +2,11 @@
 
 import { useHourlyWeather } from '@/app/(main)/_service/queries';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
 
 import { WeatherIcon } from '@/components/WeatherIcon';
 
 import { getIsNight } from '@/utils/time';
 import { getWeatherIconType } from '@/utils/weather';
-
-import { cn } from '@/lib/utils';
 
 interface HourlyForecastProps {
   city: string;
@@ -18,30 +15,20 @@ interface HourlyForecastProps {
 
 const HourlyForecast = ({ city, district }: HourlyForecastProps) => {
   const { data, isFetching } = useHourlyWeather(city, district);
-  const scrollRef = useRef<HTMLUListElement>(null);
 
   if (!data || isFetching) return <Skeleton />;
 
   const hourlyData = data.forecasts;
-  const isNowIndex = data.isNowIndex;
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ left: isNowIndex * 60, behavior: 'smooth' });
-    }
-  }, [isNowIndex]);
 
   return (
     <>
       <h2 className="text-lg font-bold mb-2">시간별 예보</h2>
 
       <div className="bg-white rounded-[16px] p-4 shadow-shadow1">
-        <ul className="flex overflow-x-auto space-x-4" ref={scrollRef}>
+        <ul className="flex overflow-x-auto space-x-4">
           {hourlyData.map((hour, index) => (
             <li key={index} className="flex flex-col items-center min-w-[60px]">
-              <span className={cn('text-sm text-gray500', isNowIndex === index && 'text-primary font-medium')}>
-                {isNowIndex === index ? '지금' : hour.time}
-              </span>
+              <span className="text-sm text-gray500">{hour.time}</span>
               <WeatherIcon type={getWeatherIconType(hour.sky, hour.rainType, getIsNight(hour.time))} className="my-2" />
               <span className="text-lg font-bold">{hour.temperature}°</span>
               {!hour.rainfall ? (
