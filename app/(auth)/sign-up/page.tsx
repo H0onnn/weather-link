@@ -1,6 +1,6 @@
+import { getSido } from '@/services/locations/apis';
+import { locationKeys } from '@/services/locations/queries';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-
-import { locationQueryOptions } from '@/hooks/queries/locations/queries';
 
 import { getQueryClient } from '@/lib/query';
 
@@ -9,7 +9,7 @@ import { SignUpForm } from './_components/SignUpForm';
 const SignupPage = async () => {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery(locationQueryOptions.sido());
+  await queryClient.prefetchQuery({ queryKey: locationKeys.list('sido'), queryFn: getSido, staleTime: Infinity });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

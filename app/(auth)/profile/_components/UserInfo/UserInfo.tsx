@@ -2,6 +2,7 @@
 
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
 import { type UpdateProfileSchema, updateProfileSchema } from '@/app/(auth)/profile/_model/valdator';
+import { useMyUserInfo, useUpdateProfile } from '@/app/(auth)/profile/_service/queries';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, Mail, MapPin, Pencil } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -9,19 +10,18 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
 
-import { useMyUserInfo, useUpdateProfile } from '@/hooks/queries/users';
-
 import { NAME_MAX_LENGTH } from '@/constants/valid';
 
 import { cn } from '@/lib/utils';
 
 const UserInfo = () => {
   const { data: user } = useMyUserInfo();
-  const userData = user?.data;
+
+  if (!user) return null;
 
   const defaultValues = {
-    name: userData?.name || '',
-    profileImage: userData?.profileImage || '',
+    name: user.name || '',
+    profileImage: user.profileImage || '',
   };
 
   const method = useForm<UpdateProfileSchema>({
@@ -71,7 +71,7 @@ const UserInfo = () => {
             <ProfileImageInput
               isDescriptionVisible={false}
               name="profileImage"
-              defaultImage={userData?.profileImage ?? undefined}
+              defaultImage={user.profileImage ?? undefined}
             />
             <div className="flex items-center">
               <div className="relative inline-block">
@@ -133,7 +133,7 @@ const UserInfo = () => {
           <Mail size={20} className="text-primary" />
           <div className="flex flex-col">
             <span className="text-gray500 text-sm">이메일</span>
-            <span className="font-medium">{userData?.email}</span>
+            <span className="font-medium">{user.email}</span>
           </div>
         </div>
         <div className="bg-gray-100 rounded-[16px] h-17 p-3 flex items-center space-x-3">
@@ -141,7 +141,7 @@ const UserInfo = () => {
           <div className="flex flex-col">
             <span className="text-gray500 text-sm">주소</span>
             <span className="font-medium">
-              {userData?.location.sido} {userData?.location.gugun}
+              {user.location.sido} {user.location.gugun}
             </span>
           </div>
         </div>

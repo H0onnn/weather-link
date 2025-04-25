@@ -11,7 +11,7 @@ export interface ApiResponse<T> {
   statusCode?: number;
   error?: string;
   message: string;
-  data: T | null;
+  data: T;
 }
 
 export interface ApiError extends ApiResponse<null> {

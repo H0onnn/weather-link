@@ -1,41 +1,56 @@
-export const PATH = Object.freeze({
+export const PATH = {
   /**
    * 홈
    */
-  root: '/' as const,
+  root: '/',
 
   /**
    * 회원가입
    */
-  signUp: '/sign-up' as const,
+  signUp: '/sign-up',
 
   /**
    * 로그인
    */
-  login: '/login' as const,
+  login: '/login',
 
   /**
    * 비밀번호 찾기
    */
-  findPassword: '/find-password' as const,
+  findPassword: '/find-password',
 
   /**
    * 날씨비교
    */
-  compare: '/compare' as const,
+  compare: '/compare',
 
   /**
    * 친구
    */
-  friend: '/friend' as const,
+  friend: '/friend',
 
   /**
    * 채팅
    */
-  chat: '/chat' as const,
+  chat: '/chat',
 
   /**
    * 마이페이지
    */
-  profile: '/profile' as const,
-});
+  profile: '/profile',
+
+  /**
+   * 프로필 관리
+   */
+  profileManage: '/profile/manage',
+
+  /**
+   * 설정
+   */
+  settings: '/settings',
+
+  /**
+   * 알림
+   */
+  notifications: '/notifications',
+} as const;
