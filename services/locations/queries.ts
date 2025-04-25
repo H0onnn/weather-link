@@ -1,4 +1,4 @@
-import { useAppQuery } from '@/hooks/queries';
+import { useAppSuspenseQuery } from '@/hooks/queries';
 
 import { getGugun, getSido } from './apis';
 
@@ -9,18 +9,22 @@ export const locationKeys = {
 };
 
 export const useCityList = () => {
-  return useAppQuery({
+  return useAppSuspenseQuery({
     queryKey: locationKeys.list('sido'),
     queryFn: () => getSido(),
     staleTime: Infinity,
+    select: (data) => data.data,
   });
 };
 
 export const useDistrictList = (sido: string) => {
-  return useAppQuery({
+  return useAppSuspenseQuery({
     queryKey: locationKeys.list(`${sido}-gugun`),
-    queryFn: () => getGugun(sido),
+    queryFn: () => {
+      if (!sido) return;
+      return getGugun(sido);
+    },
     staleTime: Infinity,
-    enabled: !!sido,
+    select: (data) => data?.data,
   });
 };

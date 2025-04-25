@@ -3,7 +3,7 @@ import { isAxiosError } from 'axios';
 
 export type BaseQueryOptions<TQueryFnData, TQueryKey extends QueryKey> = {
   queryKey: TQueryKey;
-  queryFn: () => Promise<TQueryFnData>;
+  queryFn: () => Promise<TQueryFnData> | TQueryFnData;
 };
 
 const makeQueryClient = () => {

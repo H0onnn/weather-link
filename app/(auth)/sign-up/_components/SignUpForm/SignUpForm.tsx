@@ -150,7 +150,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/도 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {sidoList?.data?.map((sido) => (
+                        {sidoList.map((sido) => (
                           <SelectItem key={sido.id} value={sido.sido}>
                             {sido.sido}
                           </SelectItem>
@@ -169,7 +169,7 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/군/구 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        {gugunList?.data?.map((gugun) => (
+                        {gugunList?.map((gugun) => (
                           <SelectItem key={gugun.id} value={gugun.gugun}>
                             {gugun.gugun}
                           </SelectItem>
