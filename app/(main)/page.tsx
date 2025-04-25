@@ -23,12 +23,10 @@ export default async function Home() {
     queryClient.prefetchQuery({
       queryKey: weatherKeys.today(city, district),
       queryFn: () => getTodayWeather(city, district),
-      staleTime: Infinity,
     }),
     queryClient.prefetchQuery({
       queryKey: weatherKeys.hourly(city, district),
       queryFn: () => getHourlyWeather(city, district),
-      staleTime: Infinity,
     }),
   ]);
 
