@@ -2,7 +2,7 @@ import { useAppQuery } from '@/hooks/queries';
 
 import { getGugun, getSido } from './apis';
 
-const locationKeys = {
+export const locationKeys = {
   all: ['locations'] as const,
   lists: () => [...locationKeys.all, 'list'] as const,
   list: (filters: string) => [...locationKeys.lists(), { filters }] as const,

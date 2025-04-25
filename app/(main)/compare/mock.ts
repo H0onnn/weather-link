@@ -1,4 +1,4 @@
-import type { HourlyWeather, TodayWeather, WeeklyWeather } from '@/types/weather';
+import type { HourlyWeather, TodayWeather, WeeklyWeather } from '@/app/(main)/_model/types';
 
 /**
  * 오늘의 날씨 더미 데이터
