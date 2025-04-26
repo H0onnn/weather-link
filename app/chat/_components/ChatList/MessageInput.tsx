@@ -5,20 +5,26 @@ import { useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 
-export const MessageInput = () => {
+import { chatSocketManager } from '@/lib/chatManager';
+
+interface MessageInputProps {
+  roomId: string;
+}
+
+export const MessageInput = ({ roomId }: MessageInputProps) => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = () => {
-    // chatSocketManager.emit('sendMessage', {
-    //   roomId: '',
-    //   content: message,
-    // });
+    chatSocketManager.emit('sendMessage', {
+      roomId,
+      content: message,
+    });
     setMessage('');
   };
 
   return (
     <form
-      className="fixed bottom-0 left-0 right-0 z-10 px-5 py-3 pb-17 bg-white"
+      className="fixed bottom-0 left-0 right-0 z-10 px-5 py-3 pb-17 bg-white max-w-[560px] mx-auto"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();

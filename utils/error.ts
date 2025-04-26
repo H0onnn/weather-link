@@ -12,6 +12,7 @@ export const parseAxiosError = (error: unknown): ApiError => {
   return {
     error: responseData?.error || 'error',
     message: responseData?.message || responseData?.error || '알 수 없는 에러가 발생했어요',
-    statusCode: axiosError.response?.status,
+    statusCode: axiosError.response?.status || 500,
+    data: responseData?.data || null,
   };
 };
