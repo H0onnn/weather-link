@@ -5,7 +5,8 @@ import { OverlayProvider } from 'overlay-kit';
 import { type ReactNode } from 'react';
 
 import { QueryProvider } from './QueryProvider';
-import { SessionProvider } from './SessionProvider';
+
+// import { SessionProvider } from './SessionProvider';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -13,13 +14,13 @@ type ProvidersProps = {
 
 const Providers = ({ children }: ProvidersProps) => {
   return (
-    <SessionProvider>
-      <QueryProvider>
-        <OverlayProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </OverlayProvider>
-      </QueryProvider>
-    </SessionProvider>
+    // <SessionProvider>
+    <QueryProvider>
+      <OverlayProvider>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </OverlayProvider>
+    </QueryProvider>
+    // </SessionProvider>
   );
 };
 
