@@ -1,15 +1,16 @@
 'use client';
 
-import { useMyUserInfo } from '@/app/(auth)/profile/_service/queries';
 import type { Message } from '@/app/chat/_model/types';
 import { useLocationChatRoom, useMessages } from '@/app/chat/_service/queries';
 import { useObserver } from '@/hooks';
+import type { User } from '@/types/user';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { SpeechBubble } from '@/components/SpeechBubble';
 
+import type { ApiResponse } from '@/lib/axios';
 import { chatSocketManager } from '@/lib/chatManager';
 import { cn } from '@/lib/utils';
 
@@ -31,12 +32,16 @@ const groupMessagesByDate = (messages: Message[]) => {
   );
 };
 
-const ChatList = () => {
+interface ChatListProps {
+  userPromise: Promise<ApiResponse<User>>;
+}
+
+const ChatList = ({ userPromise }: ChatListProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const { data: user } = useMyUserInfo();
-  const { data: chatRoom } = useLocationChatRoom(user?.location.sido ?? '');
+  const { data: user } = use(userPromise);
+  const { data: chatRoom } = useLocationChatRoom(user.location.sido);
   const roomId = chatRoom?.id ?? '';
 
   const { data: initialMessages, fetchNextPage, hasNextPage, isFetching } = useMessages(roomId);
@@ -49,7 +54,7 @@ const ChatList = () => {
   const handleSendMessage = (message: string) => {
     chatSocketManager.emit('sendMessage', {
       roomId,
-      userId: user?.id,
+      userId: user.id,
       content: message,
     });
 
@@ -59,9 +64,9 @@ const ChatList = () => {
         id: crypto.randomUUID(),
         content: message,
         sender: {
-          id: user?.id!,
-          name: user?.name!,
-          profileImage: user?.profileImage!,
+          id: user.id,
+          name: user.name,
+          profileImage: user.profileImage,
         },
         createdAt: new Date().toISOString(),
       },
@@ -120,7 +125,7 @@ const ChatList = () => {
 
                 <div className="space-y-2">
                   {messages.map((message) => {
-                    const isMine = message.sender.id === user?.id;
+                    const isMine = message.sender.id === user.id;
 
                     return (
                       <SpeechBubble
@@ -141,7 +146,7 @@ const ChatList = () => {
               <p className="text-gray500 text-center">
                 아직 우리 동네에 아무런 소식이 없어요
                 <br />
-                {user?.name}님이 첫 메시지를 남겨보세요!
+                {user.name}님이 첫 메시지를 남겨보세요!
               </p>
             </div>
           )}
