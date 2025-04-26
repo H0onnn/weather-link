@@ -1,12 +1,15 @@
 'use client';
 
+import { useMyUserInfo } from '@/app/(auth)/profile/_service/queries';
+import { useLocationChatRoom } from '@/app/chat/_service/queries';
 import { mockMessages } from '@/app/chat/mock';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { SpeechBubble } from '@/components/SpeechBubble';
 
+import { chatSocketManager } from '@/lib/chatManager';
 import { cn } from '@/lib/utils';
 
 import { MessageInput } from './MessageInput';
@@ -19,19 +22,27 @@ const ChatList = () => {
   let currentDate = '';
   const chatListRef = useRef<HTMLDivElement>(null);
 
-  //   useEffect(() => {
-  //     chatSocketManager.connectForPage('joinRoom');
+  const { data: user } = useMyUserInfo();
+  const { data: chatRoom } = useLocationChatRoom(user?.location.sido ?? '');
+  const roomId = chatRoom?.id ?? '';
 
-  //     return () => {
-  //       chatSocketManager.disconnectForPage('joinRoom');
-  //     };
-  // }, [roomId]);
+  useEffect(() => {
+    if (roomId) {
+      chatSocketManager.connectRoom(roomId);
+
+      chatSocketManager.emit('joinRoom', { roomId });
+
+      return () => {
+        chatSocketManager.disconnectRoom(roomId);
+      };
+    }
+  }, [roomId]);
 
   useLayoutEffect(() => {
     if (chatListRef.current) {
       chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
     }
-  }, []);
+  }, [mockMessages]);
 
   return (
     <>
@@ -74,7 +85,7 @@ const ChatList = () => {
         </div>
       </div>
 
-      <MessageInput />
+      <MessageInput roomId={roomId} />
     </>
   );
 };
