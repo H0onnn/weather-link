@@ -5,14 +5,20 @@ import { useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 
-export const MessageInput = () => {
+import { chatSocketManager } from '@/lib/chatManager';
+
+interface MessageInputProps {
+  roomId: string;
+}
+
+export const MessageInput = ({ roomId }: MessageInputProps) => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = () => {
-    // chatSocketManager.emit('sendMessage', {
-    //   roomId: '',
-    //   content: message,
-    // });
+    chatSocketManager.emit('sendMessage', {
+      roomId,
+      content: message,
+    });
     setMessage('');
   };
 
