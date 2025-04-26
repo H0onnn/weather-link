@@ -33,6 +33,7 @@ class ChatSocketManager {
   public emit(eventName: string, data: any) {
     const socket = socketManager.getSocket();
     if (socket && this.isConnected) {
+      console.log('emit', eventName, data);
       socket.emit(eventName, data);
     } else {
       console.warn('Socket is not connected. Unable to emit:', eventName);

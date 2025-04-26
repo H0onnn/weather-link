@@ -48,7 +48,7 @@ const SpeechBubble = ({ message, variant, className, nickname, profileImage, sen
           <span className="text-xs text-gray500">{dayjs(sentAt).format('A hh:mm')}</span>
         </div>
 
-        <div className="flex items-end">
+        <div className="w-fit ml-auto">
           <div {...props} className={cn(bubbleVariants({ variant, className }))}>
             <p>{message}</p>
           </div>

@@ -1,7 +1,6 @@
 import { getUserData, updateProfile } from '@/app/(auth)/profile/_service/apis';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-
-import { useAppMutation, useAppQuery } from '@/hooks/queries';
 
 import { parseAxiosError } from '@/utils/error';
 
@@ -13,7 +12,7 @@ export const userKeys = {
 };
 
 export const useMyUserInfo = () => {
-  return useAppQuery({
+  return useQuery({
     queryKey: userKeys.my(),
     queryFn: getUserData,
     staleTime: Infinity,
@@ -24,7 +23,8 @@ export const useMyUserInfo = () => {
 export const useUpdateProfile = () => {
   const queryClient = getQueryClient();
 
-  return useAppMutation(updateProfile, {
+  return useMutation({
+    mutationFn: updateProfile,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: userKeys.my() });
       const message =

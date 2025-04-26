@@ -1,4 +1,4 @@
-import { getToken, removeToken, setToken } from '@/actions';
+import { getToken, setToken } from '@/actions';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { redirect } from 'next/navigation';
 
@@ -78,7 +78,6 @@ axiosInstance.interceptors.response.use(
 
     if (error.response && error.response.status === 401 && !isAuthEndpoint) {
       console.error('Unauthorized');
-      await removeToken();
 
       if (isServer) {
         redirect('/login');

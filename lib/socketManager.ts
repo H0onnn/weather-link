@@ -1,7 +1,6 @@
 import { type Socket, io } from 'socket.io-client';
 
-const SOCKET_URL = 'ws://localhost:3000/chat';
-// process.env.NEXT_PUBLIC_SOCKET_URL ||
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'ws://localhost:3000/chat';
 
 class SocketManager {
   private static instance: SocketManager | null = null;
@@ -26,7 +25,6 @@ class SocketManager {
       console.log('소켓 연결 시도:', SOCKET_URL);
 
       this.socket = io(SOCKET_URL, {
-        path: '/chat',
         extraHeaders: {
           token: this.token || '',
         },
@@ -35,7 +33,6 @@ class SocketManager {
         reconnectionDelay: 1000,
         timeout: 10000,
         autoConnect: true,
-        forceNew: true,
         withCredentials: true,
       });
 
@@ -43,8 +40,8 @@ class SocketManager {
         console.warn('소켓 연결 성공');
       });
 
-      this.socket.on('disconnect', () => {
-        console.warn('소켓 연결 해제됨');
+      this.socket.on('disconnect', (reason) => {
+        console.warn('소켓 연결 해제됨', reason);
       });
 
       this.socket.on('error', (error) => {
