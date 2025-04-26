@@ -1,8 +1,6 @@
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-
-import { useAppQuery } from '@/hooks/queries';
 
 import { getHourlyWeather, getTodayWeather, getWeeklyTemperature, getWeeklyWeather } from './apis';
 
@@ -20,7 +18,7 @@ export const weatherKeys = {
 };
 
 export const useTodayWeather = (city: string, district: string) => {
-  return useAppQuery({
+  return useQuery({
     queryKey: weatherKeys.today(city, district),
     queryFn: () => getTodayWeather(city, district),
     enabled: !!city && !!district,
@@ -44,7 +42,7 @@ export const useTodayWeather = (city: string, district: string) => {
 };
 
 export const useHourlyWeather = (city: string, district: string) => {
-  return useAppQuery({
+  return useQuery({
     queryKey: weatherKeys.hourly(city, district),
     queryFn: () => getHourlyWeather(city, district),
     enabled: !!city && !!district,
