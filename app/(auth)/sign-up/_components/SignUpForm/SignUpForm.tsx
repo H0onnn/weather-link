@@ -51,8 +51,8 @@ const SignUpForm = () => {
 
   const [isVerified, setIsVerified] = useState(false);
 
-  const { data: sidoList } = useCityList();
-  const { data: gugunList } = useDistrictList(watch('location.sido'));
+  const { data: sidoList = [] } = useCityList();
+  const { data: gugunList = [] } = useDistrictList(watch('location.sido'));
 
   const handleSubmit = submit(async (data) => {
     const formData = new FormData();
