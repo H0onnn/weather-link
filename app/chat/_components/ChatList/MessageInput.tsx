@@ -5,20 +5,15 @@ import { useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 
-import { chatSocketManager } from '@/lib/chatManager';
-
 interface MessageInputProps {
-  roomId: string;
+  onSendMessage: (message: string) => void;
 }
 
-export const MessageInput = ({ roomId }: MessageInputProps) => {
+export const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = () => {
-    chatSocketManager.emit('sendMessage', {
-      roomId,
-      content: message,
-    });
+    onSendMessage(message);
     setMessage('');
   };
 
@@ -37,12 +32,6 @@ export const MessageInput = ({ roomId }: MessageInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           placeholder="오픈톡에 참여해보세요"
           containerClassName="bg-gray-100"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
         />
         <button
           type="submit"

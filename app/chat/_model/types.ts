@@ -29,3 +29,8 @@ export type ChatRoom = {
   id: string;
   sido: string;
 };
+
+export type MessagesResponse = {
+  messages: Message[];
+  meta: Meta;
+};

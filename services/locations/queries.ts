@@ -1,4 +1,4 @@
-import { useAppQuery } from '@/hooks/queries';
+import { useQuery } from '@tanstack/react-query';
 
 import { getGugun, getSido } from './apis';
 
@@ -9,7 +9,7 @@ export const locationKeys = {
 };
 
 export const useCityList = () => {
-  return useAppQuery({
+  return useQuery({
     queryKey: locationKeys.list('sido'),
     queryFn: () => getSido(),
     staleTime: Infinity,
@@ -18,7 +18,7 @@ export const useCityList = () => {
 };
 
 export const useDistrictList = (sido: string) => {
-  return useAppQuery({
+  return useQuery({
     queryKey: locationKeys.list(`${sido}-gugun`),
     queryFn: () => (sido ? getGugun(sido) : null),
     staleTime: Infinity,
