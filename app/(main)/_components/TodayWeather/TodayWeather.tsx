@@ -1,8 +1,10 @@
 'use client';
 
 import { useTodayWeather } from '@/app/(main)/_service/queries';
+import { CircleAlert } from 'lucide-react';
 
 import { WeatherIcon } from '@/components/WeatherIcon';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { getIsNight } from '@/utils/time';
 import { getWeatherBGImage, getWeatherIconType } from '@/utils/weather';
@@ -24,11 +26,22 @@ const TodayWeather = ({ city, district }: TodayWeatherProps) => {
 
   return (
     <div
-      className="bg-white rounded-[16px] p-6 shadow-shadow1 bg-cover bg-center"
+      className="bg-white rounded-[16px] p-6 shadow-shadow1 bg-cover bg-center bg-no-repeat relative"
       style={{
         backgroundImage: `url(${WEATHER_BG_IMAGES[getWeatherBGImage(forecast.skyCondition, forecast.precipitationType)]})`,
       }}
     >
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="p-0 m-0 absolute top-4 right-4">
+            <CircleAlert className="w-4 h-4 text-gray800" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-gray500">기상청 데이터가 실제 날씨와 다를 수 있습니다.</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <div className="flex flex-col items-center mb-6">
         <div className="flex items-center justify-center mb-2">
           <WeatherIcon
