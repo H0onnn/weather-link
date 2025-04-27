@@ -1,6 +1,6 @@
 import { PATH } from '@/constants/paths';
 
-export const BOTTOM_NAV_VISIBLE_PATHS = [PATH.root, PATH.compare, PATH.friend, PATH.chat, PATH.profile];
+export const BOTTOM_NAV_VISIBLE_PATHS = [PATH.root, PATH.compare, PATH.friend, PATH.profile];
 
 export const NAV_ITEMS = [
   {

@@ -127,7 +127,7 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
         }
       />
 
-      <div ref={chatListRef} className="flex-grow overflow-y-auto px-5 pt-3 pb-20">
+      <div ref={chatListRef} className="flex-grow overflow-y-auto px-5 pt-3 pb-8">
         <div ref={loaderRef} className="h-2 flex items-center justify-center" />
 
         {!isFetching && messages.length === 0 && (
