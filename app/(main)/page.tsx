@@ -1,8 +1,12 @@
 import { getUserData } from '@/app/(auth)/profile/_service/apis';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import Image from 'next/image';
+
+import { Header } from '@/components/layout/Header';
 
 import { getQueryClient } from '@/lib/query';
 
+import { HeaderActionButtons } from './_components/HeaderActionButtons';
 import { HourlyForecast } from './_components/HourlyForecast';
 import { OpenTalk } from './_components/OpenTalk';
 import { TodayWeather } from './_components/TodayWeather';
@@ -29,14 +33,29 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="flex-1 overflow-auto p-5 space-y-8 mb-2">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <TodayWeather city={city} district={district} />
-        <HourlyForecast city={city} district={district} />
-      </HydrationBoundary>
+    <>
+      <Header
+        title={
+          <div className="flex items-center space-x-2">
+            <Image src="/icons/logo.svg" alt="로고" width={50} height={40} />
+            <span>
+              {user.location.sido} {user.location.gugun}
+            </span>
+          </div>
+        }
+        rightSlot={<HeaderActionButtons />}
+        isBack={false}
+      />
 
-      <WeeklyForecast city={city} district={district} />
-      <OpenTalk />
-    </div>
+      <div className="flex-1 overflow-auto p-5 space-y-8 mb-2">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <TodayWeather city={city} district={district} />
+          <HourlyForecast city={city} district={district} />
+        </HydrationBoundary>
+
+        <WeeklyForecast city={city} district={district} />
+        <OpenTalk />
+      </div>
+    </>
   );
 }
