@@ -9,7 +9,7 @@ import type { WeatherIconType } from '@/constants/weather-icons';
  * @param isNight 현재 시간이 밤인지 여부
  * @returns 날씨 아이콘 타입
  */
-export const getWeatherIconType = (skyCondition: string, rainType: string, isNight = false): WeatherIconType => {
+export const getWeatherIconType = (skyCondition?: string, rainType?: string, isNight = false): WeatherIconType => {
   // 강수 타입별 아이콘
   if (rainType && rainType !== '없음') {
     if (rainType.includes('비')) {
@@ -40,10 +40,12 @@ export const getWeatherIconType = (skyCondition: string, rainType: string, isNig
   return isNight ? 'NIGHT' : 'SUNNY';
 };
 
-export const separateWeatherInfo = (skyAndPre: PrecipitationTypeEnum | SkyConditionEnum) => {
+export const separateWeatherInfo = (skyAndPre: PrecipitationTypeEnum | SkyConditionEnum | null) => {
+  if (!skyAndPre) return null;
+
   const precipitationTypes = ['없음', '비', '비/눈', '눈', '소나기'] as PrecipitationTypeEnum[];
 
-  const isPrecipitation = precipitationTypes.some((type) => skyAndPre.includes(type));
+  const isPrecipitation = precipitationTypes.some((type) => skyAndPre?.includes(type));
 
   if (isPrecipitation) {
     return {

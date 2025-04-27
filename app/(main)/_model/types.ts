@@ -58,8 +58,8 @@ export type WeeklyWeather = {
 
 type WeeklyForecasts = {
   forecastDate: string; // 예보 날짜 ex) YYYYMMDD
-  morning: WeeklyWeatherCondition;
-  afternoon: WeeklyWeatherCondition;
+  morning: WeeklyWeatherCondition | null;
+  afternoon: WeeklyWeatherCondition | null;
 };
 
 type WeeklyWeatherCondition = {
