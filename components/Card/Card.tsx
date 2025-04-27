@@ -5,7 +5,7 @@ import Title from './Title';
 
 const Root = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="card-container relative w-full min-h-16 bg-white p-4 rounded-[16px] shadow-shadow1">{children}</div>
+    <div className="card-container relative w-full h-19 bg-white p-4 rounded-[16px] shadow-shadow1">{children}</div>
   );
 };
 
