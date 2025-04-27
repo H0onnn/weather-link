@@ -5,7 +5,9 @@ import { useTodayWeather } from '@/app/(main)/_service/queries';
 import { WeatherIcon } from '@/components/WeatherIcon';
 
 import { getIsNight } from '@/utils/time';
-import { getWeatherIconType } from '@/utils/weather';
+import { getWeatherBGImage, getWeatherIconType } from '@/utils/weather';
+
+import { WEATHER_BG_IMAGES } from '@/constants/weather-icons';
 
 interface TodayWeatherProps {
   city: string;
@@ -21,7 +23,12 @@ const TodayWeather = ({ city, district }: TodayWeatherProps) => {
   const forecast = todayWeather.forecast;
 
   return (
-    <div className="bg-white rounded-[16px] p-6 shadow-shadow1">
+    <div
+      className="bg-white rounded-[16px] p-6 shadow-shadow1 bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${WEATHER_BG_IMAGES[getWeatherBGImage(forecast.skyCondition, forecast.precipitationType)]})`,
+      }}
+    >
       <div className="flex flex-col items-center mb-6">
         <div className="flex items-center justify-center mb-2">
           <WeatherIcon
@@ -32,7 +39,7 @@ const TodayWeather = ({ city, district }: TodayWeatherProps) => {
           />
           <span className="text-5xl font-bold">{currentWeather.temperature}°C</span>
         </div>
-        <p className="text-gray500">
+        <p className="text-gray800">
           {forecast.precipitationType === '없음' ? forecast.skyCondition : forecast.precipitationType}, 체감온도{' '}
           {currentWeather.perceivedTemperature}°C
         </p>

@@ -92,5 +92,17 @@ export const WEATHER_INFO_ICONS = {
   },
 } as const;
 
+/**
+ * 날씨 배경 이미지
+ */
+export const WEATHER_BG_IMAGES = {
+  SUNNY: '/images/weather/sunny_sky.webp',
+  CLOUDY: '/images/weather/cloudy_sky.webp',
+  RAINY: '/images/weather/rainy_sky.webp',
+  SNOWY: '/images/weather/snow_sky.webp',
+  PARTLY_CLOUDY: '/images/weather/partial_cloudy_sky.webp',
+};
+
 export type WeatherIconType = keyof typeof WEATHER_ICONS;
 export type WeatherInfoIconType = keyof typeof WEATHER_INFO_ICONS;
+export type WeatherBGImageType = keyof typeof WEATHER_BG_IMAGES;

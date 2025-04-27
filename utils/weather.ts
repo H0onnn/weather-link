@@ -1,6 +1,6 @@
 import type { PrecipitationTypeEnum, SkyConditionEnum } from '@/app/(main)/_model/types';
 
-import type { WeatherIconType } from '@/constants/weather-icons';
+import type { WeatherBGImageType, WeatherIconType } from '@/constants/weather-icons';
 
 /**
  * 날씨 상태와 WeatherIcon 타입 매핑 헬퍼 함수
@@ -58,4 +58,28 @@ export const separateWeatherInfo = (skyAndPre: PrecipitationTypeEnum | SkyCondit
     skyCondition: skyAndPre,
     rainType: '없음',
   };
+};
+
+export const getWeatherBGImage = (
+  skyCondition: SkyConditionEnum,
+  rainType: PrecipitationTypeEnum,
+): WeatherBGImageType => {
+  if (skyCondition === '맑음') {
+    return 'SUNNY';
+  }
+  if (skyCondition === '구름많음' || skyCondition === '흐림') {
+    return 'CLOUDY';
+  }
+
+  if (rainType === '비') {
+    return 'RAINY';
+  }
+  if (rainType === '눈') {
+    return 'SNOWY';
+  }
+  if (rainType === '소나기') {
+    return 'RAINY';
+  }
+
+  return 'SUNNY';
 };
