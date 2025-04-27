@@ -31,7 +31,7 @@ const HourlyForecast = ({ city, district }: HourlyForecastProps) => {
               <span className="text-sm text-gray500">{hour.time}</span>
               <WeatherIcon type={getWeatherIconType(hour.sky, hour.rainType, getIsNight(hour.time))} className="my-2" />
               <span className="text-lg font-bold">{hour.temperature}°</span>
-              {hour.rainfall > 0 ? (
+              {hour.rainfall ? (
                 <div className="flex items-center">
                   <Image src="/icons/weather/water.svg" alt="비" width={16} height={16} />
                   <span className="text-sm text-blue-300">{hour.rainfall}mm</span>
