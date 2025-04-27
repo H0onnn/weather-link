@@ -1,14 +1,16 @@
 'use client';
 
-import type { Message } from '@/app/chat/_model/types';
+import type { ChatPreview, Message } from '@/app/chat/_model/types';
 import { useLocationChatRoom, useMessages } from '@/app/chat/_service/queries';
 import { useObserver } from '@/hooks';
 import type { User } from '@/types/user';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import { CircleAlert } from 'lucide-react';
 import { use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { SpeechBubble } from '@/components/SpeechBubble';
+import { Header } from '@/components/layout/Header';
 
 import type { ApiResponse } from '@/lib/axios';
 import { chatSocketManager } from '@/lib/chatManager';
@@ -34,13 +36,16 @@ const groupMessagesByDate = (messages: Message[]) => {
 
 interface ChatListProps {
   userPromise: Promise<ApiResponse<User>>;
+  chatRoomPromise: Promise<ChatPreview>;
 }
 
-const ChatList = ({ userPromise }: ChatListProps) => {
+const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { data: user } = use(userPromise);
+  const chatRoomInfo = use(chatRoomPromise);
+
   const { data: chatRoom } = useLocationChatRoom(user.location.sido);
   const roomId = chatRoom?.id ?? '';
 
@@ -106,6 +111,22 @@ const ChatList = ({ userPromise }: ChatListProps) => {
 
   return (
     <>
+      <Header
+        title="지역 날씨 이야기"
+        rightSlot={
+          <div className="flex flex-col">
+            <div className="flex items-center space-x-2">
+              <CircleAlert width={16} height={16} className="text-gray500" />
+              <span className="text-sm font-medium text-gray500">
+                {user.location.sido} {user.location.gugun}
+              </span>
+            </div>
+
+            <span className="text-sm text-gray500 text-right">{chatRoomInfo.participantCount.toLocaleString()}명</span>
+          </div>
+        }
+      />
+
       <div ref={chatListRef} className="flex-grow overflow-y-auto px-5 pt-3 pb-20">
         <div ref={loaderRef} className="h-2 flex items-center justify-center" />
 
@@ -136,7 +157,7 @@ const ChatList = ({ userPromise }: ChatListProps) => {
                     {date}
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     {messages.map((message) => {
                       const isMine = message.sender.id === user.id;
 
