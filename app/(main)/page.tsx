@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 
 import { getQueryClient } from '@/lib/query';
 
+import { getFriendRequestList } from '../friend/_service/apis';
 import { HeaderActionButtons } from './_components/HeaderActionButtons';
 import { HourlyForecast } from './_components/HourlyForecast';
 import { OpenTalk } from './_components/OpenTalk';
@@ -17,6 +18,7 @@ import { weatherKeys } from './_service/queries';
 export default async function Home() {
   const queryClient = getQueryClient();
   const { data: user } = await getUserData();
+  const friendReqPromise = getFriendRequestList();
 
   const city = user.location.sido;
   const district = user.location.gugun;
@@ -43,7 +45,7 @@ export default async function Home() {
             </span>
           </div>
         }
-        rightSlot={<HeaderActionButtons />}
+        rightSlot={<HeaderActionButtons friendReqPromise={friendReqPromise} />}
         isBack={false}
       />
 
