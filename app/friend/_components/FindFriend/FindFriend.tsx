@@ -47,6 +47,7 @@ const FindFriend = () => {
 
       toast.success(`${friend.name}님에게 친구 요청을 보냈어요`);
     } catch (error) {
+      console.error('친구 요청 에러: ', error);
       toast.error('친구 요청 중 오류가 발생했어요');
     } finally {
       setLoadingFriendId(null);
