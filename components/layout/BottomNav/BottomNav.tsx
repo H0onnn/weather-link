@@ -2,25 +2,25 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSelectedLayoutSegment } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 
-import NAV_ITEMS from '@/constants/nav';
+import { BOTTOM_NAV_VISIBLE_PATHS, type BottomNavVisiblePaths, NAV_ITEMS } from '@/constants/nav';
 
 import { cn } from '@/lib/utils';
 
 interface NavItemProps {
   href: string;
-  segment: string | null;
-  activeSegment: string | null;
+  pathname: string;
   activeIcon: string;
   inactiveIcon: string;
   label: string;
+  getIsActive: (path: string) => boolean;
 }
 
-const NavItem = ({ href, segment, activeSegment, activeIcon, inactiveIcon, label }: NavItemProps) => {
-  const isActive = segment === activeSegment;
+const NavItem = ({ href, pathname, activeIcon, inactiveIcon, label, getIsActive }: NavItemProps) => {
+  const isActive = getIsActive(pathname);
 
   return (
     <li>
@@ -37,13 +37,17 @@ const NavItem = ({ href, segment, activeSegment, activeIcon, inactiveIcon, label
 };
 
 const BottomNav = () => {
-  const segment: string | null = useSelectedLayoutSegment();
+  const pathname = usePathname();
+
+  const isVisible = BOTTOM_NAV_VISIBLE_PATHS.includes(pathname as BottomNavVisiblePaths);
+
+  if (!isVisible) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-10 max-w-[560px] mx-auto bg-white border-t border-gray-200 py-2 px-3 h-14">
       <ul className="flex justify-between">
         {NAV_ITEMS.map((item) => (
-          <NavItem key={item.href} segment={segment} {...item} />
+          <NavItem key={item.href} {...item} getIsActive={item.isActive} pathname={pathname} />
         ))}
       </ul>
     </nav>

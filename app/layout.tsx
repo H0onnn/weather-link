@@ -28,9 +28,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={cn(pretendard.className, 'bg-background')}>
+      <body className={cn(pretendard.className, 'bg-primary/20')}>
         <Layout>{children}</Layout>
-        <Toaster richColors={true} />
+        <Toaster richColors={true} position="top-center" />
       </body>
     </html>
   );
