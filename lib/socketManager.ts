@@ -15,11 +15,19 @@ class SocketManager {
     return SocketManager.instance;
   }
 
-  public connect() {
+  public connect(userId: string): Socket | null {
+    if (!userId) {
+      console.error('Socket 연결 시 userId 누락 됨');
+      return null;
+    }
+
     if (!this.socket) {
       console.log('소켓 연결 시도:', SOCKET_URL);
 
       this.socket = io(SOCKET_URL, {
+        query: {
+          userId,
+        },
         transports: ['websocket'],
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
@@ -34,6 +42,7 @@ class SocketManager {
 
       this.socket.on('disconnect', (reason) => {
         console.warn('소켓 연결 해제됨', reason);
+        this.socket = null;
       });
 
       this.socket.on('error', (error) => {

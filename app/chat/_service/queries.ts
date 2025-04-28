@@ -1,5 +1,4 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import dayjs from 'dayjs';
 
 import { getChatPreviews, getLocationChatRoom, getMessages } from './apis';
 
@@ -34,9 +33,11 @@ export const useMessages = (roomId: string, page: number = 1) => {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.meta.totalPages > pages.length ? pages.length + 1 : undefined;
     },
-    staleTime: Infinity,
+    staleTime: 0,
     enabled: !!roomId,
-    select: (data) =>
-      data.pages.flatMap((page) => page.messages.sort((a, b) => dayjs(a.createdAt).diff(dayjs(b.createdAt)))),
+    select: (data) => {
+      const allMessages = data.pages.flatMap((page) => page.messages);
+      return allMessages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    },
   });
 };

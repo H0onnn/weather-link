@@ -42,16 +42,26 @@ interface ChatListProps {
 const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-
   const { data: user } = use(userPromise);
   const chatRoomInfo = use(chatRoomPromise);
+
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+  const scrollHeightBeforeUpdate = useRef<number>(0);
+  const scrollTopBeforeUpdate = useRef<number>(0);
 
   const { data: chatRoom } = useLocationChatRoom(user.location.sido);
   const roomId = chatRoom?.id ?? '';
 
-  const { data: initialMessages, fetchNextPage, hasNextPage, isFetching } = useMessages(roomId);
+  const { data: initialMessages, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useMessages(roomId);
+
   const loaderRef = useObserver(() => {
-    if (hasNextPage) {
+    if (hasNextPage && !isFetchingNextPage) {
+      // 스크롤 위치 저장
+      if (chatListRef.current) {
+        scrollHeightBeforeUpdate.current = chatListRef.current.scrollHeight;
+        scrollTopBeforeUpdate.current = chatListRef.current.scrollTop;
+      }
+      setShouldScrollToBottom(false);
       fetchNextPage();
     }
   });
@@ -62,20 +72,7 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
       userId: user.id,
       content: message,
     });
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        content: message,
-        sender: {
-          id: user.id,
-          name: user.name,
-          profileImage: user.profileImage,
-        },
-        createdAt: new Date().toISOString(),
-      },
-    ]);
+    setShouldScrollToBottom(true);
   };
 
   useEffect(() => {
@@ -85,12 +82,18 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
   }, [initialMessages]);
 
   useEffect(() => {
-    if (roomId) {
-      chatSocketManager.connectRoom(roomId);
+    if (roomId && user.id) {
+      chatSocketManager.connectRoom(roomId, user.id);
 
       chatSocketManager.emit('joinRoom', { roomId });
 
       const handleNewMessage = (message: Message) => {
+        // 내가 새로운 메세지 보내면 스크롤 하단으로 이동
+        const isMine = message.sender.id === user.id;
+        if (isMine) {
+          setShouldScrollToBottom(true);
+        }
+
         setMessages((prev) => [...prev, message]);
       };
 
@@ -101,13 +104,21 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
         chatSocketManager.off('newMessage', handleNewMessage);
       };
     }
-  }, [roomId]);
+  }, [roomId, user.id]);
 
   useLayoutEffect(() => {
     if (chatListRef.current) {
-      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+      if (shouldScrollToBottom) {
+        console.log('shouldScrollToBottom');
+        chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+      } else if (isFetchingNextPage) {
+        // 이전 채팅 가져올 땐 스크롤 위치 고정
+        const newScrollHeight = chatListRef.current.scrollHeight;
+        const heightDifference = newScrollHeight - scrollHeightBeforeUpdate.current;
+        chatListRef.current.scrollTop = scrollTopBeforeUpdate.current + heightDifference;
+      }
     }
-  }, [messages]);
+  }, [messages, shouldScrollToBottom, isFetchingNextPage, initialMessages]);
 
   return (
     <>
@@ -127,10 +138,8 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
         }
       />
 
-      <div ref={chatListRef} className="flex-grow overflow-y-auto px-5 pt-3 pb-8">
-        <div ref={loaderRef} className="h-2 flex items-center justify-center" />
-
-        {!isFetching && messages.length === 0 && (
+      <div className="flex flex-col h-[calc(100vh-160px)] overflow-hidden">
+        {!isFetching && messages?.length === 0 && (
           <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)]">
             <p className="text-gray500 text-center">
               아직 우리 동네에 아무런 소식이 없어요
@@ -140,30 +149,30 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
           </div>
         )}
 
-        <div className="flex flex-col space-y-4 min-h-full">
-          {isFetching ? (
-            <Skeleton />
-          ) : (
-            <>
-              {Object.entries(groupMessagesByDate(messages)).map(([date, messages], index) => (
+        <div ref={chatListRef} className="flex-1 overflow-y-auto px-5">
+          <div className="flex flex-col space-y-4 min-h-full">
+            {hasNextPage && <div ref={loaderRef} className="h-2 flex items-center justify-center" />}
+
+            {isFetching && !isFetchingNextPage && <Skeleton />}
+
+            {!isFetching &&
+              Object.entries(groupMessagesByDate(messages ?? [])).map(([date, dateMessages]) => (
                 <div key={date}>
                   <div
                     className={cn(
                       'h-6 rounded-full px-3 py-1 text-sm text-white bg-primary',
                       'flex items-center justify-center my-4 max-w-1/2 mx-auto bg-[#8A91A8]/50',
-                      index === 0 && 'mt-0',
                     )}
                   >
                     {date}
                   </div>
 
                   <div className="space-y-4">
-                    {messages.map((message) => {
+                    {dateMessages.map((message, index) => {
                       const isMine = message.sender.id === user.id;
-
                       return (
                         <SpeechBubble
-                          key={message.id}
+                          key={`${message.id}-${index}`}
                           message={message.content}
                           nickname={isMine ? '나' : message.sender.name}
                           profileImage={message.sender.profileImage ?? ''}
@@ -175,8 +184,7 @@ const ChatList = ({ userPromise, chatRoomPromise }: ChatListProps) => {
                   </div>
                 </div>
               ))}
-            </>
-          )}
+          </div>
         </div>
       </div>
 
