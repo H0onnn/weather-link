@@ -24,7 +24,7 @@ export const useSearchFriend = (query: string) => {
   });
 };
 
-export const useGetMyFriendList = () => {
+export const useGetMyrList = () => {
   return useInfiniteQuery({
     queryKey: friendKeys.list('my-friends'),
     queryFn: ({ pageParam = 0 }) => getMyFriendList(pageParam, 20),
