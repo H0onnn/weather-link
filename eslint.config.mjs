@@ -25,9 +25,11 @@ const eslintConfig = [
         },
       ],
       '@typescript-eslint/no-explicit-any': ['warn'],
+      '@typescript-eslint/no-empty-object-type': 'off',
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'error',
       'react/react-in-jsx-scope': 'off',
+      'react/no-unescaped-entities': 'off',
     },
     settings: {
       next: {

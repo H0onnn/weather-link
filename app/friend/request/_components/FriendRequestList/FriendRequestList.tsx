@@ -31,6 +31,7 @@ const FriendRequestList = ({ friendReqListPromise }: FriendRequestListProps) => 
 
       toast.success(`${friendReq.sender.name}님과 친구가 되었어요`);
     } catch (error) {
+      console.error('친구 요청 처리 에러 : ', error);
       toast.error('친구 요청 처리 중 오류가 발생했어요');
     }
   };

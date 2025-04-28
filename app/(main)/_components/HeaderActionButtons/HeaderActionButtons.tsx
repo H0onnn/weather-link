@@ -1,6 +1,6 @@
 'use client';
 
-import type { FriendRequestList } from '@/app/friend/_model/types';
+import type { FriendRequest } from '@/app/friend/_model/types';
 import { Mail, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { use } from 'react';
@@ -8,7 +8,7 @@ import { use } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface HeaderActionButtonsProps {
-  friendReqPromise: Promise<FriendRequestList[]>;
+  friendReqPromise: Promise<FriendRequest[]>;
 }
 
 const HeaderActionButtons = ({ friendReqPromise }: HeaderActionButtonsProps) => {

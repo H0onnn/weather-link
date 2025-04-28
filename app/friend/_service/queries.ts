@@ -1,4 +1,4 @@
-import type { FriendRequest, SearchedFriend } from '@/app/friend/_model/types';
+import type { SearchedFriend } from '@/app/friend/_model/types';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
