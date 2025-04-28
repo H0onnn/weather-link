@@ -40,7 +40,7 @@ const OpenTalk = () => {
 
           <ul className="flex flex-col gap-3">
             {preview.messages.length > 0 ? (
-              preview.messages.map((message) => (
+              preview.messages.reverse().map((message) => (
                 <li key={message.id}>
                   <SpeechBubble
                     message={message.content}

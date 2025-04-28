@@ -36,8 +36,8 @@ const LoginForm = () => {
 
     const response = await login(email, password);
 
-    if (response?.error) {
-      toast.error(response.error);
+    if (!response.success) {
+      toast.error(response.message);
       return;
     }
 
@@ -49,7 +49,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-5 -mt-[73px]">
       <FormProvider {...method}>
         <div className="flex flex-col items-center justify-center py-4">
           <Image src="/icons/logo.svg" alt="로고" width={200} height={120} priority />

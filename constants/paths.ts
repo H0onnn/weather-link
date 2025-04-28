@@ -47,10 +47,15 @@ export const PATH = {
   /**
    * 설정
    */
-  settings: '/settings',
+  settings: '/setting',
 
   /**
    * 알림
    */
   notifications: '/notifications',
+
+  /**
+   * 알림 (친구 요청)
+   */
+  friendRequest: '/friend/request',
 } as const;
