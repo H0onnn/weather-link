@@ -19,7 +19,7 @@ export const MessageInput = ({ onSendMessage }: MessageInputProps) => {
 
   return (
     <form
-      className="fixed bottom-0 left-0 right-0 z-10 px-5 py-3 pb-17 bg-white max-w-[560px] mx-auto"
+      className="fixed bottom-0 left-0 right-0 z-10 px-5 py-3 bg-white max-w-[560px] mx-auto"
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();

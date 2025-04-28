@@ -14,10 +14,10 @@ class ChatSocketManager {
     return ChatSocketManager.instance;
   }
 
-  public connectRoom(roomId: string) {
+  public connectRoom(roomId: string, userId: string) {
     this.activeRooms.add(roomId);
     if (!this.isConnected) {
-      socketManager.connect();
+      socketManager.connect(userId);
       this.isConnected = true;
     }
   }

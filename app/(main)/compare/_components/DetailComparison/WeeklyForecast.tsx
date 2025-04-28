@@ -52,14 +52,27 @@ const WeeklyForecast = ({ myLocation }: WeeklyForecastProps) => {
         {myWeather.forecasts.map((myForecast, index) => {
           const compareForecast = compareWeather.forecasts[index];
 
-          const myMorningWeather = separateWeatherInfo(myForecast.morning.skyAndPre);
-          const compareMorningWeather = separateWeatherInfo(compareForecast.morning.skyAndPre);
+          const myMorning = myForecast.morning || myForecast.afternoon || null;
+          const compareMorning = compareForecast.morning || compareForecast.afternoon || null;
+
+          const myMorningWeather = separateWeatherInfo(myMorning?.skyAndPre || null);
+          const compareMorningWeather = separateWeatherInfo(compareMorning?.skyAndPre || null);
+
+          const myWeatherIconType = getWeatherIconType(
+            myMorningWeather?.skyCondition || '맑음',
+            myMorningWeather?.rainType || '없음',
+          );
+
+          const compareWeatherIconType = getWeatherIconType(
+            compareMorningWeather?.skyCondition || '맑음',
+            compareMorningWeather?.rainType || '없음',
+          );
 
           return (
             <div key={`day-${index}`} className="grid grid-cols-3 items-center">
               {/* 내 위치 날씨 */}
               <div className="flex items-center justify-center -ml-4">
-                <WeatherIcon type={getWeatherIconType(myMorningWeather.skyCondition, myMorningWeather.rainType)} />
+                <WeatherIcon type={myWeatherIconType} />
                 <div className="text-sm">
                   <span className="text-primary font-medium">{myForecast.minTemp}°</span>
                   <span className="mx-1 text-gray500">/</span>
@@ -71,9 +84,7 @@ const WeeklyForecast = ({ myLocation }: WeeklyForecastProps) => {
 
               {/* 비교 위치 날씨 */}
               <div className="flex items-center justify-center">
-                <WeatherIcon
-                  type={getWeatherIconType(compareMorningWeather.skyCondition, compareMorningWeather.rainType)}
-                />
+                <WeatherIcon type={compareWeatherIconType} />
                 <div className="text-sm">
                   <span className="text-primary font-medium">{compareForecast.minTemp}°</span>
                   <span className="mx-1 text-gray500">/</span>

@@ -32,16 +32,23 @@ const WeeklyForecast = ({ city, district }: WeeklyForecastProps) => {
           <span className="col-span-1 text-center font-semibold">최저/최고</span>
 
           {weeklyData.forecasts.map((day, index) => {
-            const isToday = index === 0;
-            const morningWeather = separateWeatherInfo(day.morning.skyAndPre);
-            const afternoonWeather = separateWeatherInfo(day.afternoon.skyAndPre);
+            const isTommorow = index === 0;
+            const morningWeather = separateWeatherInfo(day.morning?.skyAndPre || null);
+            const afternoonWeather = separateWeatherInfo(day.afternoon?.skyAndPre || null);
+
+            const morningWeatherIcon = getWeatherIconType(morningWeather?.skyCondition, morningWeather?.rainType);
+            const afternoonWeatherIcon = getWeatherIconType(
+              afternoonWeather?.skyCondition || morningWeather?.skyCondition,
+              afternoonWeather?.rainType || morningWeather?.rainType,
+              true,
+            );
 
             return (
               <Fragment key={day.forecastDate}>
                 {/* 날짜 열 */}
-                <div className={cn('col-span-1', isToday && 'bg-primary/30 rounded-[16px]')}>
+                <div className={cn('col-span-1', isTommorow && 'bg-primary/30 rounded-[16px]')}>
                   <div className="flex items-center justify-center space-x-1 h-full">
-                    <span className="font-medium">{isToday ? '오늘' : day.dayOfWeek}</span>
+                    <span className="font-medium">{isTommorow ? '내일' : day.dayOfWeek}</span>
                     <span className="text-gray500">{day.formattedDate}</span>
                   </div>
                 </div>
@@ -52,19 +59,17 @@ const WeeklyForecast = ({ city, district }: WeeklyForecastProps) => {
                     <div className="flex items-center">
                       <div className="flex items-center">
                         <Image src="/icons/weather/water.svg" alt="비" width={16} height={16} />
-                        <span className="text-primary text-xs">{day.morning.rnst}%</span>
+                        <span className="text-primary text-xs">{day.morning?.rnst || day.afternoon?.rnst || '-'}%</span>
                       </div>
-                      <WeatherIcon type={getWeatherIconType(morningWeather.skyCondition, morningWeather.rainType)} />
+                      <WeatherIcon type={morningWeatherIcon} />
                     </div>
 
                     <div className="flex items-center">
                       <div className="flex items-center">
                         <Image src="/icons/weather/water.svg" alt="비" width={16} height={16} />
-                        <span className="text-primary text-xs">{day.afternoon.rnst}%</span>
+                        <span className="text-primary text-xs">{day.afternoon?.rnst || day.morning?.rnst || '-'}%</span>
                       </div>
-                      <WeatherIcon
-                        type={getWeatherIconType(afternoonWeather.skyCondition, afternoonWeather.rainType, true)}
-                      />
+                      <WeatherIcon type={afternoonWeatherIcon} />
                     </div>
                   </div>
                 </div>

@@ -33,8 +33,11 @@ export const useMessages = (roomId: string, page: number = 1) => {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.meta.totalPages > pages.length ? pages.length + 1 : undefined;
     },
-    staleTime: Infinity,
+    staleTime: 0,
     enabled: !!roomId,
-    select: (data) => data.pages.flatMap((page) => page.messages),
+    select: (data) => {
+      const allMessages = data.pages.flatMap((page) => page.messages);
+      return allMessages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    },
   });
 };

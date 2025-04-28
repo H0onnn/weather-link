@@ -42,8 +42,8 @@ export type HourlyWeather = {
 
 type HourlyForecasts = {
   time: string; // 24시간제 ex) 17:00
-  temperature: string; // 기온 C
-  rainfall: string; // 강수 확률 %
+  temperature: number; // 기온 C
+  rainfall: number; // 강수 확률 %
   sky: SkyConditionEnum; // 하늘 상태
   rainType: PrecipitationTypeEnum; // 강수 형태
 };
@@ -58,8 +58,8 @@ export type WeeklyWeather = {
 
 type WeeklyForecasts = {
   forecastDate: string; // 예보 날짜 ex) YYYYMMDD
-  morning: WeeklyWeatherCondition;
-  afternoon: WeeklyWeatherCondition;
+  morning: WeeklyWeatherCondition | null;
+  afternoon: WeeklyWeatherCondition | null;
 };
 
 type WeeklyWeatherCondition = {

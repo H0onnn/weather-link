@@ -5,7 +5,6 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'ws://localhost:3000/ch
 class SocketManager {
   private static instance: SocketManager | null = null;
   private socket: Socket | null = null;
-  private token: string | null = null;
 
   private constructor() {}
 
@@ -16,17 +15,18 @@ class SocketManager {
     return SocketManager.instance;
   }
 
-  public setToken(token: string) {
-    this.token = token;
-  }
+  public connect(userId: string): Socket | null {
+    if (!userId) {
+      console.error('Socket 연결 시 userId 누락 됨');
+      return null;
+    }
 
-  public connect() {
     if (!this.socket) {
       console.log('소켓 연결 시도:', SOCKET_URL);
 
       this.socket = io(SOCKET_URL, {
-        extraHeaders: {
-          token: this.token || '',
+        query: {
+          userId,
         },
         transports: ['websocket'],
         reconnectionAttempts: 5,
@@ -42,6 +42,7 @@ class SocketManager {
 
       this.socket.on('disconnect', (reason) => {
         console.warn('소켓 연결 해제됨', reason);
+        this.socket = null;
       });
 
       this.socket.on('error', (error) => {
