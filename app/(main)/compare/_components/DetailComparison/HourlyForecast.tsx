@@ -50,12 +50,13 @@ const HourlyForecast = ({ myLocation }: HourlyForecastProps) => {
       <div className="max-h-[300px] overflow-x-hidden overflow-y-auto">
         {myWeather.forecasts.map((myForecast, index) => {
           const compareForeast = compareWeather.forecasts[index];
+
           const myIconType = getWeatherIconType(myForecast.sky, myForecast.rainType, getIsNight(myForecast.time));
 
           const compareIconType = getWeatherIconType(
-            compareForeast.sky,
-            compareForeast.rainType,
-            getIsNight(compareForeast.time),
+            compareForeast?.sky,
+            compareForeast?.rainType,
+            getIsNight(compareForeast?.time),
           );
 
           return (
@@ -71,7 +72,7 @@ const HourlyForecast = ({ myLocation }: HourlyForecastProps) => {
               {/* 비교 위치 날씨 */}
               <div className="flex items-center justify-center -mr-2">
                 <WeatherIcon type={compareIconType} />
-                <div className="font-medium">{compareForeast.temperature}°</div>
+                <div className="font-medium">{compareForeast?.temperature}°</div>
               </div>
             </div>
           );
