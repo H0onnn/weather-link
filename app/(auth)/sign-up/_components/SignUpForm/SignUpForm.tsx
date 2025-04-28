@@ -3,11 +3,15 @@
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
-import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/validator';
+import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
+import { signup } from '@/app/(auth)/sign-up/_service/apis';
+import { useCityList, useDistrictList } from '@/services/locations/queries';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { Input } from '@/components/Input';
@@ -38,16 +42,42 @@ const SignUpForm = () => {
     defaultValues,
   });
 
-  const [isVerified, setIsVerified] = useState(false);
-
   const {
     handleSubmit: submit,
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = method;
 
+  const [isVerified, setIsVerified] = useState(false);
+
+  const { data: sidoList = [] } = useCityList();
+  const { data: gugunList = [] } = useDistrictList(watch('location.sido'));
+
   const handleSubmit = submit(async (data) => {
-    console.info(data);
+    const formData = new FormData();
+
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('name', data.name);
+    formData.append('sido', data.location.sido);
+    formData.append('gugun', data.location.gugun);
+    formData.append('termsAgreed', String(data.termsAgreed));
+    formData.append('locationAgreed', String(data.locationAgreed));
+
+    if (data.profileImage instanceof File && data.profileImage.size > 0) {
+      formData.append('profileImage', data.profileImage);
+    }
+
+    const response = await signup(formData);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    toast.success('회원가입이 완료되었어요');
+    redirect('/login');
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
@@ -120,15 +150,11 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/도 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="seoul">서울특별시</SelectItem>
-                        <SelectItem value="busan">부산광역시</SelectItem>
-                        <SelectItem value="incheon">인천광역시</SelectItem>
-                        <SelectItem value="daegu">대구광역시</SelectItem>
-                        <SelectItem value="gwangju">광주광역시</SelectItem>
-                        <SelectItem value="daejeon">대전광역시</SelectItem>
-                        <SelectItem value="ulsan">울산광역시</SelectItem>
-                        <SelectItem value="sejong">세종특별자치시</SelectItem>
-                        <SelectItem value="gyeonggi">경기도</SelectItem>
+                        {sidoList.map((sido) => (
+                          <SelectItem key={sido.id} value={sido.sido}>
+                            {sido.sido}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
@@ -143,15 +169,11 @@ const SignUpForm = () => {
                         <SelectValue placeholder="시/군/구 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="gangnam">강남구</SelectItem>
-                        <SelectItem value="gangdong">강동구</SelectItem>
-                        <SelectItem value="gangbuk">강북구</SelectItem>
-                        <SelectItem value="gangseo">강서구</SelectItem>
-                        <SelectItem value="gwanak">관악구</SelectItem>
-                        <SelectItem value="gwangjin">광진구</SelectItem>
-                        <SelectItem value="guro">구로구</SelectItem>
-                        <SelectItem value="geumcheon">금천구</SelectItem>
-                        <SelectItem value="nowon">노원구</SelectItem>
+                        {gugunList?.map((gugun) => (
+                          <SelectItem key={gugun.id} value={gugun.gugun}>
+                            {gugun.gugun}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
@@ -197,7 +219,12 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full mt-[30px]" disabled={isSubmitting || !isVerified}>
+          <Button
+            type="submit"
+            className="w-full mt-[30px]"
+            disabled={isSubmitting || !isVerified}
+            isLoading={isSubmitting}
+          >
             회원가입
           </Button>
         </form>

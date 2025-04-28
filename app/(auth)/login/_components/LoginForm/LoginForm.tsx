@@ -1,11 +1,14 @@
 'use client';
 
 import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
-import { loginSchema } from '@/app/(auth)/login/validator';
+import { loginSchema } from '@/app/(auth)/login/_model/validator';
+import { login } from '@/app/(auth)/login/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
@@ -29,7 +32,16 @@ const LoginForm = () => {
   } = method;
 
   const handleSubmit = submit(async () => {
-    alert(JSON.stringify(getValues()));
+    const { email, password } = getValues();
+
+    const response = await login(email, password);
+
+    if (!response.success) {
+      toast.error(response.message);
+      return;
+    }
+
+    redirect('/');
   });
 
   const handleOAuthLogin = (provider: OAuthProvider) => {
@@ -37,7 +49,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-5 -mt-[73px]">
       <FormProvider {...method}>
         <div className="flex flex-col items-center justify-center py-4">
           <Image src="/icons/logo.svg" alt="로고" width={200} height={120} priority />
@@ -64,7 +76,7 @@ const LoginForm = () => {
             autoComplete="current-password"
             error={errors.password?.message}
           />
-          <Button type="submit" disabled={isSubmitting} className="mt-[14px]">
+          <Button type="submit" disabled={isSubmitting} className="mt-[14px]" isLoading={isSubmitting}>
             로그인
           </Button>
         </form>

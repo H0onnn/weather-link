@@ -1,8 +1,9 @@
 import { VariantProps, cva } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { User } from 'lucide-react';
 import { type HTMLAttributes } from 'react';
+
+import { UserAvatar } from '@/components/UserAvatar';
 
 import { cn } from '@/lib/utils';
 
@@ -26,7 +27,7 @@ const bubbleVariants = cva(
 interface SpeechBubbleProps extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof bubbleVariants> {
   message: string;
   nickname: string;
-  profileImage: string;
+  profileImage: string | null;
   sentAt: string | Date;
 }
 
@@ -37,8 +38,7 @@ const SpeechBubble = ({ message, variant, className, nickname, profileImage, sen
     <article className={cn('flex gap-2', isMine && 'flex-row-reverse', className)}>
       {!isMine && (
         <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-          {/* TODO: Avatar 컴포넌트로 변경 */}
-          <User className="text-gray500" />
+          <UserAvatar imageUrl={profileImage || undefined} />
         </div>
       )}
 
@@ -48,7 +48,7 @@ const SpeechBubble = ({ message, variant, className, nickname, profileImage, sen
           <span className="text-xs text-gray500">{dayjs(sentAt).format('A hh:mm')}</span>
         </div>
 
-        <div className="flex items-end">
+        <div className={cn('w-fit', isMine ? 'ml-auto' : 'mr-auto')}>
           <div {...props} className={cn(bubbleVariants({ variant, className }))}>
             <p>{message}</p>
           </div>
