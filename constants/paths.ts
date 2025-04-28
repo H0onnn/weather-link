@@ -57,5 +57,5 @@ export const PATH = {
   /**
    * 알림 (친구 요청)
    */
-  friendRequest: '/friend-request',
+  friendRequest: '/friend/request',
 } as const;
