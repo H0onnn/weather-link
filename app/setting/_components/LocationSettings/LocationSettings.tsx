@@ -1,19 +1,40 @@
 'use client';
 
-import { SettingsAction, SettingsState, cityOptions, districts } from '@/app/setting/_lib/settingsReducer';
-import { type Dispatch } from 'react';
+import { useMyUserInfo, useUpdateUserLocation } from '@/app/(auth)/profile/_service/queries';
+import { useCityList, useDistrictList } from '@/services/locations/queries';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface LocationSettingsProps {
-  state: SettingsState;
-  dispatch: Dispatch<SettingsAction>;
-}
+const LocationSettings = () => {
+  const router = useRouter();
+  const { data: user } = useMyUserInfo();
 
-const LocationSettings = ({ state, dispatch }: LocationSettingsProps) => {
+  const [city, setCity] = useState(user?.location.sido);
+  const [district, setDistrict] = useState(user?.location.gugun);
+
+  const { data: cityList = [] } = useCityList();
+  const { data: districtList = [] } = useDistrictList(city || '');
+  const { mutate: updateUserLocation } = useUpdateUserLocation(() => router.refresh());
+
+  const districtChange = (districtId: string) => {
+    updateUserLocation(districtId);
+  };
+
   const handleCityChange = (value: string) => {
-    dispatch({ type: 'SET_CITY', payload: value });
+    setCity(value);
+    setDistrict('');
+  };
+
+  const handleDistrictSelect = (selectedGugun: string) => {
+    setDistrict(selectedGugun);
+
+    const selectedDistrict = districtList.find((d) => d.gugun === selectedGugun);
+    if (selectedDistrict) {
+      districtChange(selectedDistrict.id);
+    }
   };
 
   return (
@@ -22,14 +43,14 @@ const LocationSettings = ({ state, dispatch }: LocationSettingsProps) => {
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="city">시/도 선택</Label>
-          <Select value={state.city} onValueChange={handleCityChange}>
+          <Select value={city} onValueChange={handleCityChange} defaultValue={user?.location.sido}>
             <SelectTrigger id="city" className="rounded-[16px] w-full">
               <SelectValue placeholder="시/도를 선택해주세요" />
             </SelectTrigger>
             <SelectContent className="rounded-[16px]">
-              {cityOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="rounded-[16px]">
-                  {option.label}
+              {cityList.map((city) => (
+                <SelectItem key={city.id} value={city.sido} className="rounded-[16px]">
+                  {city.sido}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -39,19 +60,19 @@ const LocationSettings = ({ state, dispatch }: LocationSettingsProps) => {
         <div className="space-y-2">
           <Label htmlFor="district">시/군/구 선택</Label>
           <Select
-            value={state.district}
-            onValueChange={(value) => dispatch({ type: 'SET_DISTRICT', payload: value })}
-            disabled={!state.city || !districts[state.city]}
+            value={district}
+            onValueChange={handleDistrictSelect}
+            disabled={!city}
+            defaultValue={user?.location.gugun}
           >
             <SelectTrigger id="district" className="rounded-[16px] w-full">
               <SelectValue placeholder="시/군/구를 선택해주세요" />
             </SelectTrigger>
             <SelectContent className="rounded-[16px]">
-              {state.city &&
-                districts[state.city] &&
-                districts[state.city].map((option) => (
-                  <SelectItem key={option.value} value={option.value} className="rounded-[16px]">
-                    {option.label}
+              {city &&
+                districtList.map((district) => (
+                  <SelectItem key={district.id} value={district.gugun} className="rounded-[16px]">
+                    {district.gugun}
                   </SelectItem>
                 ))}
             </SelectContent>

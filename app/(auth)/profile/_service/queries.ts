@@ -1,9 +1,11 @@
-import { getUserData, updateProfile } from '@/app/(auth)/profile/_service/apis';
+import { getUserData, updateProfile, updateUserLocation } from '@/app/(auth)/profile/_service/apis';
+import { chatKeys } from '@/app/chat/_service/queries';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { parseAxiosError } from '@/utils/error';
 
+import type { ApiError } from '@/lib/axios';
 import { getQueryClient } from '@/lib/query';
 
 export const userKeys = {
@@ -34,6 +36,23 @@ export const useUpdateProfile = () => {
     onError: (error: unknown) => {
       const parsed = parseAxiosError(error);
       toast.error(parsed.message);
+    },
+  });
+};
+
+export const useUpdateUserLocation = (callback?: () => void) => {
+  const queryClient = getQueryClient();
+
+  return useMutation({
+    mutationFn: (locationId: string) => updateUserLocation(locationId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: userKeys.my() });
+      await queryClient.invalidateQueries({ queryKey: chatKeys.previews() });
+      toast.success('위치 변경이 완료되었어요');
+      callback?.();
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message);
     },
   });
 };

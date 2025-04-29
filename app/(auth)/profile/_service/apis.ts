@@ -1,5 +1,7 @@
 import { User } from '@/types/user';
 
+import { parseAxiosError } from '@/utils/error';
+
 import { api } from '@/lib/axios';
 
 export const getUserData = async () => {
@@ -31,5 +33,19 @@ export const withdraw = async () => {
     return response;
   } catch (error) {
     throw error;
+  }
+};
+
+export const updateUserLocation = async (locationId: string) => {
+  try {
+    const response = await api.patch('/users/location', {
+      locationId,
+    });
+    return response;
+  } catch (error) {
+    return {
+      success: false,
+      ...parseAxiosError(error),
+    };
   }
 };
