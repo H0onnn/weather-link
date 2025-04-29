@@ -4,7 +4,7 @@ import { removeToken } from '@/actions';
 import { logout, withdraw } from '@/app/(auth)/profile/_service/apis';
 import { useMyUserInfo } from '@/app/(auth)/profile/_service/queries';
 import { RegisterType } from '@/types/user';
-import { signOut } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import { overlay } from 'overlay-kit';
 import { toast } from 'sonner';
 
@@ -44,8 +44,8 @@ export default function ProfileManagePage() {
         });
       }
 
-      signOut({ callbackUrl: '/login', redirect: true });
       queryClient.clear();
+      redirect('/login');
     } catch {
       toast.error('예상치 못한 오류가 발생했어요', {
         description: '잠시 후 다시 시도해주세요.',
