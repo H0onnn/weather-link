@@ -52,7 +52,7 @@ const LoginForm = () => {
     <div className="p-5 -mt-[73px]">
       <FormProvider {...method}>
         <div className="flex flex-col items-center justify-center py-4">
-          <Image src="/icons/logo.svg" alt="로고" width={200} height={120} priority />
+          <Image src="/icons/logo-main.png" alt="로고" width={200} height={120} priority />
         </div>
 
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>

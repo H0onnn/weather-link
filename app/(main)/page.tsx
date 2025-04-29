@@ -39,7 +39,7 @@ export default async function Home() {
       <Header
         title={
           <div className="flex items-center space-x-2">
-            <Image src="/icons/logo.svg" alt="로고" width={50} height={40} />
+            <Image src="/icons/logo-sub.png" alt="로고" width={50} height={40} />
             <span>
               {user.location.sido} {user.location.gugun}
             </span>
