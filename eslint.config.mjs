@@ -26,6 +26,7 @@ const eslintConfig = [
       ],
       '@typescript-eslint/no-explicit-any': ['warn'],
       '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'error',
       'react/react-in-jsx-scope': 'off',
