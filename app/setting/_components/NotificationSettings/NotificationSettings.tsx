@@ -1,7 +1,10 @@
 'use client';
 
-import { SettingsAction, SettingsState, dustOptions } from '@/app/setting/_lib/settingsReducer';
-import { Dispatch, useRef, useState } from 'react';
+import { SettingTypeEnum } from '@/app/setting/_model/types';
+import { createSettingInfo, updateSettingActive } from '@/app/setting/_service/apis';
+import { useGetSettings, useUpdateSetting } from '@/app/setting/_service/queries';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,74 +13,170 @@ import { Switch } from '@/components/ui/switch';
 
 import { debounce } from '@/utils/debounce';
 
-interface NotificationSettingsProps {
-  state: SettingsState;
-  dispatch: Dispatch<SettingsAction>;
-}
+export const dustOptions = [
+  { value: '좋음', label: '좋음' },
+  { value: '보통', label: '보통' },
+  { value: '나쁨', label: '나쁨' },
+  { value: '매우나쁨', label: '매우나쁨' },
+];
 
-const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) => {
-  // 로컬 UI 상태
-  const [tempTemperature, setTempTemperature] = useState(state.temperatureThreshold);
-  const [tempHumidity, setTempHumidity] = useState(state.humidityThreshold);
-  const [tempWind, setTempWind] = useState(state.windThreshold);
+const NotificationSettings = () => {
+  const { data: settings = [] } = useGetSettings();
+  const { mutate: updateSetting } = useUpdateSetting();
+
+  const isFirstSetting = settings?.length === 0;
+
+  const [notificationsEnabled, setNotificationsEnabled] = useState(
+    () => settings?.some((setting) => setting.active) ?? false,
+  );
+  const [temperatureThreshold, setTemperatureThreshold] = useState(25);
+  const [humidityThreshold, setHumidityThreshold] = useState(60);
+  const [windThreshold, setWindThreshold] = useState(10);
+  const [dustThreshold, setDustThreshold] = useState('매우나쁨');
 
   const debouncedTemperatureUpdate = useRef(
-    debounce((value: number) => {
-      dispatch({ type: 'SET_TEMPERATURE_THRESHOLD', payload: value });
-      updateSettings({ temperatureThreshold: value });
+    debounce(async (value: number) => {
+      if (isFirstSetting) {
+        await createSettingInfo({
+          type: SettingTypeEnum.TEMPERATURE,
+          threshold: value,
+          active: notificationsEnabled,
+        });
+      }
+
+      updateSetting({
+        settingId: settings.find((setting) => setting.type === SettingTypeEnum.TEMPERATURE)?.id!,
+        settingInfo: {
+          type: SettingTypeEnum.TEMPERATURE,
+          threshold: value,
+          active: notificationsEnabled,
+        },
+      });
     }),
   ).current;
 
   const debouncedHumidityUpdate = useRef(
-    debounce((value: number) => {
-      dispatch({ type: 'SET_HUMIDITY_THRESHOLD', payload: value });
-      updateSettings({ humidityThreshold: value });
+    debounce(async (value: number) => {
+      if (isFirstSetting) {
+        await createSettingInfo({
+          type: SettingTypeEnum.HUMIDITY,
+          threshold: value,
+          active: notificationsEnabled,
+        });
+      }
+
+      updateSetting({
+        settingId: settings.find((setting) => setting.type === SettingTypeEnum.HUMIDITY)?.id!,
+        settingInfo: {
+          type: SettingTypeEnum.HUMIDITY,
+          threshold: value,
+          active: notificationsEnabled,
+        },
+      });
     }),
   ).current;
 
   const debouncedWindUpdate = useRef(
-    debounce((value: number) => {
-      dispatch({ type: 'SET_WIND_THRESHOLD', payload: value });
-      updateSettings({ windThreshold: value });
+    debounce(async (value: number) => {
+      if (isFirstSetting) {
+        await createSettingInfo({
+          type: SettingTypeEnum.WIND,
+          threshold: value,
+          active: notificationsEnabled,
+        });
+      }
+      updateSetting({
+        settingId: settings.find((setting) => setting.type === SettingTypeEnum.WIND)?.id!,
+        settingInfo: {
+          type: SettingTypeEnum.WIND,
+          threshold: value,
+          active: notificationsEnabled,
+        },
+      });
     }),
   ).current;
 
-  const updateSettings = async (settings: Partial<SettingsState>) => {
-    console.log('API 호출:', settings);
+  const handleNotificationToggle = async (checked: boolean) => {
+    setNotificationsEnabled(checked);
+
+    try {
+      const response = await updateSettingActive(checked);
+
+      if (!response.success) {
+        toast.error(response.message);
+        setNotificationsEnabled(false);
+        return;
+      }
+    } catch (error) {
+      console.error('알림 토글 오류: ', error);
+      toast.error('알림 활성화 중 오류가 발생했어요');
+      setNotificationsEnabled(false);
+    }
   };
 
-  // 알림 토글
-  const handleNotificationToggle = (checked: boolean) => {
-    dispatch({ type: 'TOGGLE_NOTIFICATIONS', payload: checked });
-    updateSettings({ notificationsEnabled: checked });
-  };
-
-  // 온도 변경
   const handleTemperatureChange = (values: number[]) => {
     const value = values[0];
-    setTempTemperature(value);
+    setTemperatureThreshold(value);
     debouncedTemperatureUpdate(value);
   };
 
-  // 습도 변경
   const handleHumidityChange = (values: number[]) => {
     const value = values[0];
-    setTempHumidity(value);
+    setHumidityThreshold(value);
     debouncedHumidityUpdate(value);
   };
 
-  // 바람 변경
   const handleWindChange = (values: number[]) => {
     const value = values[0];
-    setTempWind(value);
+    setWindThreshold(value);
     debouncedWindUpdate(value);
   };
 
-  // 미세먼지 변경
-  const handleDustChange = (value: string) => {
-    dispatch({ type: 'SET_DUST_THRESHOLD', payload: value });
-    updateSettings({ dustThreshold: value });
+  const handleDustChange = async (value: string) => {
+    setDustThreshold(value);
+
+    if (isFirstSetting) {
+      await createSettingInfo({
+        type: SettingTypeEnum.AIRQUALITY,
+        threshold: value,
+        active: notificationsEnabled,
+      });
+    }
+
+    updateSetting({
+      settingId: settings.find((setting) => setting.type === SettingTypeEnum.AIRQUALITY)?.id!,
+      settingInfo: {
+        type: SettingTypeEnum.AIRQUALITY,
+        threshold: value,
+        active: notificationsEnabled,
+      },
+    });
   };
+
+  useEffect(() => {
+    if (isFirstSetting) return;
+
+    if (settings?.length) {
+      settings.forEach((setting) => {
+        switch (setting.type) {
+          case SettingTypeEnum.TEMPERATURE:
+            setTemperatureThreshold(setting.threshold as number);
+            break;
+          case SettingTypeEnum.HUMIDITY:
+            setHumidityThreshold(setting.threshold as number);
+            break;
+          case SettingTypeEnum.WIND:
+            setWindThreshold(setting.threshold as number);
+            break;
+          case SettingTypeEnum.AIRQUALITY:
+            setDustThreshold(setting.threshold as string);
+            break;
+          default:
+            break;
+        }
+      });
+    }
+  }, [settings]);
 
   return (
     <div className="bg-white rounded-[16px] p-4 shadow-shadow1">
@@ -87,7 +186,7 @@ const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) =>
           <Label htmlFor="notifications" className="text-sm">
             알림
           </Label>
-          <Switch id="notifications" checked={state.notificationsEnabled} onCheckedChange={handleNotificationToggle} />
+          <Switch id="notifications" checked={notificationsEnabled} onCheckedChange={handleNotificationToggle} />
         </div>
       </div>
 
@@ -95,15 +194,15 @@ const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) =>
         <div className="space-y-2">
           <div className="flex justify-between">
             <Label className="flex items-center">온도</Label>
-            <span className="text-sm font-medium text-primary">{tempTemperature}°C</span>
+            <span className="text-sm font-medium text-primary">{temperatureThreshold}°C</span>
           </div>
           <Slider
-            value={[tempTemperature]}
+            value={[temperatureThreshold]}
             onValueChange={handleTemperatureChange}
             min={0}
             max={40}
             step={1}
-            disabled={!state.notificationsEnabled}
+            disabled={!notificationsEnabled}
             className="w-full"
           />
         </div>
@@ -111,15 +210,15 @@ const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) =>
         <div className="space-y-2">
           <div className="flex justify-between">
             <Label className="flex items-center">습도</Label>
-            <span className="text-sm font-medium text-primary">{tempHumidity}%</span>
+            <span className="text-sm font-medium text-primary">{humidityThreshold}%</span>
           </div>
           <Slider
-            value={[tempHumidity]}
+            value={[humidityThreshold]}
             onValueChange={handleHumidityChange}
             min={0}
             max={100}
             step={1}
-            disabled={!state.notificationsEnabled}
+            disabled={!notificationsEnabled}
             className="w-full"
           />
         </div>
@@ -127,15 +226,15 @@ const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) =>
         <div className="space-y-2">
           <div className="flex justify-between">
             <Label className="flex items-center">바람</Label>
-            <span className="text-sm font-medium text-primary">{tempWind}m/s</span>
+            <span className="text-sm font-medium text-primary">{windThreshold}m/s</span>
           </div>
           <Slider
-            value={[tempWind]}
+            value={[windThreshold]}
             onValueChange={handleWindChange}
             min={0}
             max={30}
             step={1}
-            disabled={!state.notificationsEnabled}
+            disabled={!notificationsEnabled}
             className="w-full"
           />
         </div>
@@ -144,7 +243,7 @@ const NotificationSettings = ({ state, dispatch }: NotificationSettingsProps) =>
           <div className="flex justify-between">
             <Label className="flex items-center">미세먼지</Label>
           </div>
-          <Select value={state.dustThreshold} onValueChange={handleDustChange} disabled={!state.notificationsEnabled}>
+          <Select value={dustThreshold} onValueChange={handleDustChange} disabled={!notificationsEnabled}>
             <SelectTrigger className="rounded-[16px] w-full">
               <SelectValue placeholder="미세먼지 등급을 선택해주세요" />
             </SelectTrigger>
