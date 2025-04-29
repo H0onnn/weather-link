@@ -32,7 +32,7 @@ export const useGetMyFriendList = () => {
     getNextPageParam: (lastPage) => {
       return lastPage.total <= lastPage.take * (lastPage.skip + 1) ? undefined : lastPage.skip + lastPage.take;
     },
-    select: (data) => data.pages.flatMap((page) => page.data),
+    select: (data) => data.pages.flatMap((page) => page.items),
   });
 };
 

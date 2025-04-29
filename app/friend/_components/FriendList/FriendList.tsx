@@ -10,9 +10,11 @@ import { Card } from '@/components/Card';
 import { DropdownMenu } from '@/components/DropdownMenu/DropdownMenu';
 import { Modal } from '@/components/Modal';
 import { UserAvatar } from '@/components/UserAvatar';
-// import { WeatherIcon } from '@/components/WeatherIcon';
+import { WeatherIcon } from '@/components/WeatherIcon';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuGroup, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+
+import { getWeatherIconType } from '@/utils/weather';
 
 const FriendList = () => {
   const { data: friends, isFetching, hasNextPage, fetchNextPage } = useGetMyFriendList();
@@ -70,13 +72,13 @@ const FriendList = () => {
           {friends && friends.length > 0 && (
             <>
               {friends.map((friend) => (
-                <Card.Root key={friend.id}>
+                <Card.Root key={friend.user.id}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <UserAvatar />
                       <div className="flex flex-col gap-1">
-                        <Card.Title>{friend.name}</Card.Title>
-                        <Card.Description>{friend.email}</Card.Description>
+                        <Card.Title>{friend.user.name}</Card.Title>
+                        <Card.Description>{friend.user.email}</Card.Description>
                       </div>
                     </div>
 
@@ -90,7 +92,7 @@ const FriendList = () => {
                         <DropdownMenuGroup>
                           <DropdownMenuItem
                             className="cursor-pointer text-red"
-                            onClick={() => handleDeleteFriend(friend)}
+                            onClick={() => handleDeleteFriend(friend.user)}
                           >
                             <LucideTrash2 className="text-red" stroke="currentColor" />
                             친구 삭제
@@ -102,10 +104,14 @@ const FriendList = () => {
 
                   <div className="flex flex-col space-y-1.5 rounded-[16px] bg-gray-100 p-3 mt-2">
                     <span className="text-gray500 text-sm">
-                      {friend.location.sido} {friend.location.gugun}
+                      {friend.user.location.sido} {friend.user.location.gugun}
                     </span>
-                    {/* TODO: 친구 날씨 정보 추가 (백엔드) */}
-                    <span className="text-gray500 text-sm">구름 조금</span>
+
+                    <div className="flex items-center space-x-2 -ml-3">
+                      <WeatherIcon type={getWeatherIconType(friend.weather.sky)} className="-mr-1" />
+                      <span className="font-medium mt-0.5">{friend.weather.temperature}°C</span>
+                      <span className="text-gray500 text-sm">{friend.weather.sky}</span>
+                    </div>
                   </div>
                 </Card.Root>
               ))}
@@ -131,6 +137,15 @@ const FriendCardSkeleton = () => {
         </div>
 
         <div className="flex-1/4 rounded-full h-9 max-w-28 bg-gray-200 animate-pulse" />
+      </div>
+
+      <div className="flex flex-col space-y-1.5 rounded-[16px] bg-gray-100 p-3 mt-2">
+        <div className="w-32 h-4 bg-gray-200 rounded animate-pulse" />
+        <div className="flex items-center space-x-2 mt-1">
+          <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+          <div className="h-5 w-12 bg-gray-200 rounded animate-pulse" />
+          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+        </div>
       </div>
     </Card.Root>
   );
