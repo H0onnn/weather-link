@@ -4,6 +4,7 @@ import { signupWithSocial } from '@/app/(auth)/sign-up/_service/apis';
 import { type SocialSignupFormSchema, socialSignupSchema } from '@/app/(auth)/sign-up/social/_model/validator';
 import { useCityList, useDistrictList } from '@/services/locations/queries';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { redirect } from 'next/navigation';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -45,6 +46,7 @@ const AdditionalInformationForm = () => {
     }
 
     toast.success('회원가입이 완료되었어요');
+    redirect('/');
   });
 
   return (
