@@ -82,7 +82,9 @@ const SignUpForm = () => {
   });
 
   const handleOAuthSignUp = (provider: OAuthProvider) => {
-    console.info(`${provider} 소셜 회원가입`); // TODO: 소셜 회원가입 구현
+    const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const authUrl = `${BASE_URL}/auth/${provider}?origin=${window.location.origin}`;
+    window.location.href = authUrl;
   };
 
   return (

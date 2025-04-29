@@ -1,6 +1,7 @@
 'use client';
 
-import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
+import { OAuthButton } from '@/app/(auth)/_components/OAuthButton';
+import type { OAuthProvider } from '@/app/(auth)/login/_model/types';
 import { loginSchema } from '@/app/(auth)/login/_model/validator';
 import { login } from '@/app/(auth)/login/_service/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,8 +45,10 @@ const LoginForm = () => {
     redirect('/');
   });
 
-  const handleOAuthLogin = (provider: OAuthProvider) => {
-    console.info(provider); // TODO: api
+  const handleOAuthLogin = async (provider: OAuthProvider) => {
+    const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const authUrl = `${BASE_URL}/auth/${provider}?origin=${window.location.origin}`;
+    window.location.href = authUrl;
   };
 
   return (

@@ -23,5 +23,6 @@ export const useDistrictList = (sido: string) => {
     queryFn: () => (sido ? getGugun(sido) : null),
     staleTime: Infinity,
     select: (data) => data?.data,
+    enabled: !!sido,
   });
 };

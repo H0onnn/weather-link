@@ -10,6 +10,11 @@ export const PATH = {
   signUp: '/sign-up',
 
   /**
+   * 소셜 회원가입
+   */
+  signUpSocial: '/sign-up/social',
+
+  /**
    * 로그인
    */
   login: '/login',

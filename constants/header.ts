@@ -20,6 +20,9 @@ export const HEADER_TITLE = {
   [PATH.signUp]: {
     title: '회원가입',
   },
+  [PATH.signUpSocial]: {
+    title: '소셜 회원가입',
+  },
   [PATH.friend]: {
     title: '내 친구',
   },

@@ -9,3 +9,11 @@ export type SignupFormData = {
   termsAgreed: boolean;
   locationAgreed: boolean;
 };
+
+export type SocialSignupFormData = {
+  profileImage?: string;
+  termsAgreed: boolean;
+  locationAgreed: boolean;
+  sido: string;
+  gugun: string;
+};

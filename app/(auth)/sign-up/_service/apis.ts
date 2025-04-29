@@ -1,3 +1,4 @@
+import type { SocialSignupFormData } from '@/app/(auth)/sign-up/_model/types';
 import type { User } from '@/types/user';
 
 import { parseAxiosError } from '@/utils/error';
@@ -49,6 +50,19 @@ export const sendCertEmail = async (email: string) => {
 export const verifyCertEmail = async (email: string, code: string) => {
   try {
     const response = await api.post<void>('/auth/service/signup/verifycode', { email, code });
+    return response;
+  } catch (error) {
+    const parsed = parseAxiosError(error);
+    return {
+      success: false,
+      ...parsed,
+    };
+  }
+};
+
+export const signupWithSocial = async (data: SocialSignupFormData) => {
+  try {
+    const response = await api.post<User>('/auth/social/complete', data);
     return response;
   } catch (error) {
     const parsed = parseAxiosError(error);
