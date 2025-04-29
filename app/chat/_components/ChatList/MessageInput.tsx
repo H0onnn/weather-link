@@ -30,7 +30,7 @@ export const MessageInput = ({ onSendMessage }: MessageInputProps) => {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="오픈톡에 참여해보세요"
+          placeholder="메세지를 입력해주세요"
           containerClassName="bg-gray-100"
         />
         <button
