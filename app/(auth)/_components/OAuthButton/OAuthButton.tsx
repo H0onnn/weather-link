@@ -1,10 +1,9 @@
 'use client';
 
+import type { OAuthProvider } from '@/app/(auth)/login/_model/types';
 import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
-
-export type OAuthProvider = 'kakao' | 'google' | 'naver';
 
 interface OAuthButtonProps {
   provider: OAuthProvider;

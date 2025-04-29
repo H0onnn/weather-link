@@ -1,8 +1,9 @@
 'use client';
 
 import { AuthType, Authenticator } from '@/app/(auth)/_components/Authenticator';
-import { OAuthButton, type OAuthProvider } from '@/app/(auth)/_components/OAuthButton';
+import { OAuthButton } from '@/app/(auth)/_components/OAuthButton';
 import { ProfileImageInput } from '@/app/(auth)/_components/ProfileImageInput';
+import type { OAuthProvider } from '@/app/(auth)/login/_model/types';
 import { SignupFormSchema, signupSchema } from '@/app/(auth)/sign-up/_model/validator';
 import { signup } from '@/app/(auth)/sign-up/_service/apis';
 import { useCityList, useDistrictList } from '@/services/locations/queries';
