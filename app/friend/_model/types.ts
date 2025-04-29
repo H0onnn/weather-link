@@ -3,6 +3,15 @@ import type { User } from '@/types/user';
 
 export interface SearchedFriend extends Omit<User, 'registerType' | 'theme'> {}
 
+export type FriendStatusEnum = 'FRIENDS' | 'REQUEST_SENT' | 'REQUEST_RECEIVED' | 'NOT_FRIENDS';
+
+interface FriendResponse<T> {
+  items: T[];
+  total: number;
+  take: number;
+  skip: number;
+}
+
 export type ReceivedFriendReq = {
   id: string;
   status: 'pending' | 'accepted' | 'rejected';
@@ -10,18 +19,18 @@ export type ReceivedFriendReq = {
   sender: SearchedFriend;
 };
 
-export type FriendList = {
-  items: {
-    user: SearchedFriend;
-    weather: {
-      temperature: number;
-      sky: SkyConditionEnum | PrecipitationTypeEnum;
-    };
-  }[];
-  total: number;
-  take: number;
-  skip: number;
-};
+export type SearchedFriendList = FriendResponse<{
+  user: SearchedFriend;
+  status: FriendStatusEnum;
+}>;
+
+export type FriendList = FriendResponse<{
+  user: SearchedFriend;
+  weather: {
+    temperature: number;
+    sky: SkyConditionEnum | PrecipitationTypeEnum;
+  };
+}>;
 
 export type RequestFriendResponse = {
   data: {

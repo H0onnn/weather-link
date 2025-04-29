@@ -1,5 +1,4 @@
-import type { FriendList, FriendRequest, RequestFriendResponse, SearchedFriend } from '@/app/friend/_model/types';
-import type { User } from '@/types/user';
+import type { FriendList, FriendRequest, RequestFriendResponse, SearchedFriendList } from '@/app/friend/_model/types';
 
 import { parseAxiosError } from '@/utils/error';
 
@@ -7,12 +6,7 @@ import { api } from '@/lib/axios';
 
 export const searchFriend = async (query: string, skip: number = 0, take: number = 20) => {
   try {
-    const response = await api.get<{
-      data: SearchedFriend[];
-      total: number;
-      take: number;
-      skip: number;
-    }>('/friends/search', {
+    const response = await api.get<SearchedFriendList>('/friends/search', {
       params: {
         name: query,
         skip,
@@ -30,13 +24,9 @@ export const requestFriend = async (friendId: string) => {
     const response = await api.post<RequestFriendResponse>('/friends/request', {
       receiverId: friendId,
     });
-    return response;
+    return response.data;
   } catch (error) {
-    const parsedError = parseAxiosError(error);
-    return {
-      success: false,
-      ...parsedError,
-    };
+    throw parseAxiosError(error);
   }
 };
 

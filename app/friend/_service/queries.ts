@@ -2,9 +2,10 @@ import type { SearchedFriend } from '@/app/friend/_model/types';
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { type ApiError } from '@/lib/axios';
 import { getQueryClient } from '@/lib/query';
 
-import { deleteFriend, getMyFriendList, searchFriend } from './apis';
+import { deleteFriend, getMyFriendList, requestFriend, searchFriend } from './apis';
 
 export const friendKeys = {
   all: ['friend'] as const,
@@ -19,7 +20,7 @@ export const useSearchFriend = (query: string) => {
     getNextPageParam: (lastPage) => {
       return lastPage.total <= lastPage.take * (lastPage.skip + 1) ? undefined : lastPage.skip + lastPage.take;
     },
-    select: (data) => data.pages.flatMap((page) => page.data),
+    select: (data) => data.pages.flatMap((page) => page.items),
     enabled: !!query,
   });
 };
@@ -36,13 +37,28 @@ export const useGetMyFriendList = () => {
   });
 };
 
+export const useRequestFriend = () => {
+  const queryClient = getQueryClient();
+
+  return useMutation({
+    mutationFn: (friend: SearchedFriend) => requestFriend(friend.id),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: friendKeys.all });
+      toast.success(`${variables.name}님에게 친구 요청을 보냈어요`);
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message);
+    },
+  });
+};
+
 export const useDeleteFriend = () => {
   const queryClient = getQueryClient();
 
   return useMutation({
     mutationFn: (friend: SearchedFriend) => deleteFriend(friend.id),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: friendKeys.list('my-friends') });
+      queryClient.invalidateQueries({ queryKey: friendKeys.all });
       toast.success(`${variables.name}님을 친구 목록에서 삭제했어요`);
     },
     onError: (error) => {
