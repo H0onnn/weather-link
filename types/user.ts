@@ -1,6 +1,6 @@
 import { Location } from './location';
 
-type RegisterType = 'email' | 'kakao' | 'google' | 'naver';
+export type RegisterType = 'EMAIL' | 'KAKAO' | 'GOOGLE' | 'NAVER';
 
 export type User = {
   id: string;
