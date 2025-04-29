@@ -1,5 +1,6 @@
 import { LocationSettings } from '@/app/setting/_components/LocationSettings';
-import { NotificationSettings } from '@/app/setting/_components/NotificationSettings';
+
+// import { NotificationSettings } from '@/app/setting/_components/NotificationSettings';
 
 export default function SettingsPage() {
   return (
