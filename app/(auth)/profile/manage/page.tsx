@@ -2,6 +2,8 @@
 
 import { removeToken } from '@/actions';
 import { logout, withdraw } from '@/app/(auth)/profile/_service/apis';
+import { useMyUserInfo } from '@/app/(auth)/profile/_service/queries';
+import { RegisterType } from '@/types/user';
 import { signOut } from 'next-auth/react';
 import { overlay } from 'overlay-kit';
 import { toast } from 'sonner';
@@ -12,8 +14,24 @@ import { Button } from '@/components/ui/button';
 import { type ApiResponse } from '@/lib/axios';
 import { getQueryClient } from '@/lib/query';
 
+const getRegisterType = (registerType: RegisterType) => {
+  switch (registerType) {
+    case 'EMAIL':
+      return '이메일';
+    case 'KAKAO':
+      return '카카오';
+    case 'GOOGLE':
+      return '구글';
+    case 'NAVER':
+      return '네이버';
+    default:
+      return;
+  }
+};
+
 export default function ProfileManagePage() {
   const queryClient = getQueryClient();
+  const { data: user } = useMyUserInfo();
 
   const manageFunction = async (fn: () => Promise<ApiResponse<unknown>>, type: 'logout' | 'withdraw' = 'logout') => {
     try {
@@ -89,7 +107,7 @@ export default function ProfileManagePage() {
     <div className="p-5">
       <div className="bg-white rounded-[16px] shadow-shadow1 p-4">
         <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-          <span className="font-medium">카카오 계정</span>
+          <span className="font-medium">{getRegisterType(user?.registerType ?? 'EMAIL')} 계정</span>
           <button className="text-gray500 text-sm cursor-pointer" onClick={handleLogout}>
             로그아웃
           </button>
