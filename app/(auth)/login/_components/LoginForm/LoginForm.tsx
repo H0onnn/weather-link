@@ -1,5 +1,6 @@
 'use client';
 
+import { removeToken } from '@/actions';
 import { OAuthButton } from '@/app/(auth)/_components/OAuthButton';
 import type { OAuthProvider } from '@/app/(auth)/login/_model/types';
 import { loginSchema } from '@/app/(auth)/login/_model/validator';
@@ -8,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -15,6 +17,8 @@ import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
 
 import { OAUTH_PROVIDERS } from '@/constants/oauth';
+
+import { getQueryClient } from '@/lib/query';
 
 const LoginForm = () => {
   const method = useForm({
@@ -50,6 +54,18 @@ const LoginForm = () => {
     const authUrl = `${BASE_URL}/auth/${provider}?origin=${window.location.origin}`;
     window.location.href = authUrl;
   };
+
+  // 임시 처리
+  useEffect(() => {
+    const clear = async () => {
+      const queryClient = getQueryClient();
+
+      queryClient.clear();
+      await removeToken();
+    };
+
+    clear();
+  }, []);
 
   return (
     <div className="p-5 -mt-[73px]">
