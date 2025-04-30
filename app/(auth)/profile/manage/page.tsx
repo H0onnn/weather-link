@@ -34,23 +34,17 @@ export default function ProfileManagePage() {
   const { data: user } = useMyUserInfo();
 
   const manageFunction = async (fn: () => Promise<ApiResponse<unknown>>, type: 'logout' | 'withdraw' = 'logout') => {
-    try {
-      await fn();
-      await removeToken();
+    await fn();
+    await removeToken();
 
-      if (type === 'withdraw') {
-        toast.success('탈퇴가 완료되었어요', {
-          description: '그동안 이용해주셔서 감사합니다. 나중에 다시 만나요!',
-        });
-      }
-
-      queryClient.clear();
-      redirect('/login');
-    } catch {
-      toast.error('예상치 못한 오류가 발생했어요', {
-        description: '잠시 후 다시 시도해주세요.',
+    if (type === 'withdraw') {
+      toast.success('탈퇴가 완료되었어요', {
+        description: '그동안 이용해주셔서 감사합니다. 나중에 다시 만나요!',
       });
     }
+
+    queryClient.clear();
+    redirect('/login');
   };
 
   const handleLogout = () => {
@@ -64,7 +58,14 @@ export default function ProfileManagePage() {
               <Button variant="secondary" className="flex-1 text-base font-semibold" onClick={props.close}>
                 아니오
               </Button>
-              <Button variant="warn" className="flex-1 text-base font-semibold" onClick={() => manageFunction(logout)}>
+              <Button
+                variant="warn"
+                className="flex-1 text-base font-semibold"
+                onClick={async () => {
+                  props.close();
+                  await manageFunction(logout);
+                }}
+              >
                 네, 로그아웃할래요
               </Button>
             </>
