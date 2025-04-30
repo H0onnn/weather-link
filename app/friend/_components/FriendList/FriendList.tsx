@@ -3,7 +3,8 @@
 import type { SearchedFriend } from '@/app/friend/_model/types';
 import { useDeleteFriend, useGetMyFriendList } from '@/app/friend/_service/queries';
 import { useObserver } from '@/hooks';
-import { EllipsisVertical, LucideTrash2 } from 'lucide-react';
+import { ChartNoAxesColumn, EllipsisVertical, LucideTrash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { overlay } from 'overlay-kit';
 
 import { Card } from '@/components/Card';
@@ -16,7 +17,10 @@ import { DropdownMenuGroup, DropdownMenuItem } from '@/components/ui/dropdown-me
 
 import { getWeatherIconType } from '@/utils/weather';
 
+import { PATH } from '@/constants/paths';
+
 const FriendList = () => {
+  const router = useRouter();
   const { data: friends, isFetching, hasNextPage, fetchNextPage } = useGetMyFriendList();
   const { mutate: deleteFriend } = useDeleteFriend();
 
@@ -69,7 +73,7 @@ const FriendList = () => {
             </div>
           )}
 
-          {friends && friends.length > 0 && (
+          {friends && friends.length === 0 && (
             <>
               {friends.map((friend) => (
                 <Card.Root key={friend.user.id}>
@@ -90,6 +94,18 @@ const FriendList = () => {
                       }
                       slot={
                         <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            className="cursor-pointer text-black"
+                            onClick={() =>
+                              router.push(
+                                `${PATH.compare}?city=${friend.user.location.sido}&district=${friend.user.location.gugun}`,
+                              )
+                            }
+                          >
+                            <ChartNoAxesColumn className="text-black" stroke="currentColor" />
+                            날씨 비교
+                          </DropdownMenuItem>
+
                           <DropdownMenuItem
                             className="cursor-pointer text-red"
                             onClick={() => handleDeleteFriend(friend.user)}
