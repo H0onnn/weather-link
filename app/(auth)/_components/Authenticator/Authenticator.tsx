@@ -5,6 +5,7 @@ import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/_service/ap
 import { useTimer } from '@/hooks';
 import { useCallback, useState, useTransition } from 'react';
 import { type Control, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
@@ -102,23 +103,24 @@ const Authenticator = <T extends FieldValues>({
 
     startVerifyTransition(async () => {
       try {
-        const isVerifySuccess =
+        const verifyResponse =
           type === AuthType.Signup
             ? await VERIFY_FUNCTION['signUp'](value, code)
             : await VERIFY_FUNCTION['passwordReset'](value, code);
 
-        if (isVerifySuccess) {
-          setIsCertNumSent(false);
-          setIsVerified(true);
-          resetResendTimer();
-          resetVerifyTimer();
-          onVerified?.();
-        } else {
-          setCertNumError('유효하지 않은 인증번호입니다.');
+        if (!verifyResponse.success) {
+          setCertNumError(verifyResponse.message);
+          return;
         }
+
+        setIsCertNumSent(false);
+        setIsVerified(true);
+        resetResendTimer();
+        resetVerifyTimer();
+        onVerified?.();
       } catch (error) {
         console.error('Failed to verify cert number: ', error);
-        setCertNumError('인증번호 확인 중 오류가 발생했습니다.');
+        setCertNumError('인증번호 확인 중 오류가 발생했어요');
       }
     });
   };
