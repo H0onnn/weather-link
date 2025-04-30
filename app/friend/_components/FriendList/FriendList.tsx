@@ -73,13 +73,13 @@ const FriendList = () => {
             </div>
           )}
 
-          {friends && friends.length === 0 && (
+          {friends && friends.length > 0 && (
             <>
               {friends.map((friend) => (
                 <Card.Root key={friend.user.id}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <UserAvatar />
+                      <UserAvatar imageUrl={friend.user.profileImage || undefined} />
                       <div className="flex flex-col gap-1">
                         <Card.Title>{friend.user.name}</Card.Title>
                         <Card.Description>{friend.user.email}</Card.Description>
