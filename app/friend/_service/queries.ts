@@ -1,11 +1,18 @@
-import type { SearchedFriend } from '@/app/friend/_model/types';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import type { FriendRequest, SearchedFriend } from '@/app/friend/_model/types';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { type ApiError } from '@/lib/axios';
 import { getQueryClient } from '@/lib/query';
 
-import { deleteFriend, getMyFriendList, requestFriend, searchFriend } from './apis';
+import {
+  deleteFriend,
+  getFriendRequestList,
+  getMyFriendList,
+  requestFriend,
+  respondFriendRequest,
+  searchFriend,
+} from './apis';
 
 export const friendKeys = {
   all: ['friend'] as const,
@@ -64,6 +71,34 @@ export const useDeleteFriend = () => {
     onError: (error) => {
       toast.error('친구 삭제 중 오류가 발생했어요');
       console.error('친구 삭제 오류: ', error);
+    },
+  });
+};
+
+export const useFriendRequestList = () => {
+  return useQuery({
+    queryKey: friendKeys.list('friend-requests'),
+    queryFn: getFriendRequestList,
+  });
+};
+
+export const useRespondFriendRequest = () => {
+  const queryClient = getQueryClient();
+
+  return useMutation({
+    mutationFn: ({ request, accept }: { request: FriendRequest; accept: boolean }) =>
+      respondFriendRequest(request.id, accept),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: friendKeys.list('friend-requests') });
+
+      if (variables.accept) {
+        toast.success(`${variables.request.sender.name}님과 친구가 되었어요`);
+      } else {
+        toast.success(`${variables.request.sender.name}님의 친구 요청을 거절했어요`);
+      }
+    },
+    onError: (error: ApiError) => {
+      toast.error(error.message);
     },
   });
 };

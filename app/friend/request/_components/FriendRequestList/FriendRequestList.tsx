@@ -1,49 +1,36 @@
 'use client';
 
-import type { FriendRequest } from '@/app/friend/_model/types';
-import { respondFriendRequest } from '@/app/friend/_service/apis';
+import { useFriendRequestList, useRespondFriendRequest } from '@/app/friend/_service/queries';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { EllipsisVertical, Handshake, MailX } from 'lucide-react';
-import { use } from 'react';
-import { toast } from 'sonner';
 
 import { Card } from '@/components/Card';
 import { DropdownMenu } from '@/components/DropdownMenu';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuGroup, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
 
 dayjs.locale('ko');
 
-interface FriendRequestListProps {
-  friendReqListPromise: Promise<FriendRequest[]>;
-}
+const FriendRequestList = () => {
+  const { data: friendReqList = [], isFetching } = useFriendRequestList();
+  const { mutate: respondFriendRequest } = useRespondFriendRequest();
 
-const FriendRequestList = ({ friendReqListPromise }: FriendRequestListProps) => {
-  const friendReqList = use(friendReqListPromise);
+  if (isFetching) {
+    return <FriendRequestListSkeleton />;
+  }
 
-  const handleRespondFriendRequest = async (friendReq: FriendRequest, accept: boolean) => {
-    try {
-      const response = await respondFriendRequest(friendReq.id, accept);
-      if (!response.success) {
-        toast.error(response.message);
-      }
-
-      toast.success(`${friendReq.sender.name}님과 친구가 되었어요`);
-    } catch (error) {
-      console.error('친구 요청 처리 에러 : ', error);
-      toast.error('친구 요청 처리 중 오류가 발생했어요');
-    }
-  };
+  if (friendReqList.length === 0) {
+    return (
+      <div className="flex-grow flex justify-center items-center h-full min-h-[calc(100dvh-200px)]">
+        <span className="text-gray500 text-center">받은 친구 요청이 없어요</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-5">
-      {friendReqList.length === 0 && (
-        <div className="flex-grow flex justify-center items-center h-full min-h-[calc(100dvh-200px)]">
-          <span className="text-gray500 text-center">받은 친구 요청이 없어요</span>
-        </div>
-      )}
-
       <div className="flex flex-col space-y-3">
         {friendReqList.map((friendReq) => (
           <Card.Root key={friendReq.id}>
@@ -64,7 +51,7 @@ const FriendRequestList = ({ friendReqListPromise }: FriendRequestListProps) => 
                     <DropdownMenuItem
                       className="cursor-pointer text-sm p-0"
                       onClick={() => {
-                        handleRespondFriendRequest(friendReq, true);
+                        respondFriendRequest({ request: friendReq, accept: true });
                       }}
                     >
                       <Handshake className="text-black" stroke="currentColor" />
@@ -73,7 +60,7 @@ const FriendRequestList = ({ friendReqListPromise }: FriendRequestListProps) => 
                     <DropdownMenuItem
                       className="cursor-pointer text-red text-sm p-0"
                       onClick={() => {
-                        handleRespondFriendRequest(friendReq, false);
+                        respondFriendRequest({ request: friendReq, accept: false });
                       }}
                     >
                       <MailX className="text-red" stroke="currentColor" />
@@ -87,6 +74,27 @@ const FriendRequestList = ({ friendReqListPromise }: FriendRequestListProps) => 
             <span className="mt-2.5 text-sm font-medium text-gray500">
               '{friendReq.sender.name}' 님이 친구 요청을 보냈어요
             </span>
+          </Card.Root>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const FriendRequestListSkeleton = () => {
+  return (
+    <div className="flex-1 p-5">
+      <div className="flex flex-col space-y-3">
+        {[...Array(3)].map((_, index) => (
+          <Card.Root key={index}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
+            <Skeleton className="h-5 w-4/5 mt-2.5" />
           </Card.Root>
         ))}
       </div>
