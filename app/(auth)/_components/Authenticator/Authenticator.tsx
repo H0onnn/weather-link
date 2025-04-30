@@ -5,7 +5,6 @@ import { sendCertEmail, verifyCertEmail } from '@/app/(auth)/sign-up/_service/ap
 import { useTimer } from '@/hooks';
 import { useCallback, useState, useTransition } from 'react';
 import { type Control, type FieldPath, type FieldValues, useWatch } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { Input } from '@/components/Input';
 import { Button } from '@/components/ui/button';
